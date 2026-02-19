@@ -18,11 +18,11 @@ import io
 # ============================================================================
 
 # Telegram Configuration
-TELEGRAM_BOT_TOKEN = "8283051703:AAErzoc81cVoJxpLTCmjBL9ITfQzhyRkc3M"  # Get from @BotFather
-TELEGRAM_CHAT_ID = "5766184841"      # Your chat/channel ID
+TELEGRAM_BOT_TOKEN = ""  # Get from @BotFather
+TELEGRAM_CHAT_ID = ""      # Your chat/channel ID
 
 # Discord Configuration
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1471946787882537152/l5jatdxJGhw9j1Msot9aO6ANatCBGgZS2v3ZHZ_AtvHn7vr6wI8FJPVvCtitcn4hhq3g"  # From Discord channel settings
+DISCORD_WEBHOOK_URL = " # From Discord channel settings"
 
 # General Settings
 TEMP_FOLDER = "temp"
