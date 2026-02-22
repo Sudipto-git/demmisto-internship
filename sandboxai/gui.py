@@ -7,11 +7,210 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, scrolledtext
 import threading
 import json
+import os
+import ipaddress
 from pathlib import Path
 from datetime import datetime
+from urllib.parse import urlparse, urlunparse
+
 from scanner import ThreatScopeScanner, ScanResult
-from config import ConfigManager
+from config import ConfigManager, load_env_file
 from formatter import TerminalFormatter
+import requests
+
+load_env_file()
+
+DEFAULT_N8N_BASE_URL = "http://localhost:5678"
+DEFAULT_N8N_WEBHOOK_URL = f"{DEFAULT_N8N_BASE_URL}/webhook/scan"
+DEFAULT_N8N_WEBHOOK_URL_TEST = f"{DEFAULT_N8N_BASE_URL}/webhook-test/scan"
+
+
+def _normalized(url: str) -> str:
+    return url.strip().rstrip("/")
+
+
+def _from_workflow_url(workflow_url: str):
+    if not workflow_url:
+        return []
+    parsed = urlparse(workflow_url)
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return []
+    base = f"{parsed.scheme}://{parsed.netloc}"
+    return [f"{base}/webhook/scan", f"{base}/webhook-test/scan"]
+
+
+def _is_local_url(url: str) -> bool:
+    try:
+        host = (urlparse(url).hostname or "").lower()
+    except ValueError:
+        return False
+    if not host:
+        return False
+    if host == "localhost":
+        return True
+    try:
+        ip = ipaddress.ip_address(host)
+        return ip.is_loopback or ip.is_private or ip.is_link_local
+    except ValueError:
+        return host.endswith(".local")
+
+
+def _url_with_default_n8n_port(url: str) -> str:
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return ""
+
+    if not parsed.hostname or parsed.port is not None:
+        return ""
+    if not _is_local_url(url):
+        return ""
+
+    host = parsed.hostname
+    if ":" in host and not host.startswith("["):
+        host = f"[{host}]"
+
+    if parsed.username:
+        auth = parsed.username
+        if parsed.password:
+            auth += f":{parsed.password}"
+        netloc = f"{auth}@{host}:5678"
+    else:
+        netloc = f"{host}:5678"
+    return urlunparse(parsed._replace(netloc=netloc))
+
+
+def _url_with_localhost_alias(url: str) -> str:
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return ""
+
+    host = parsed.hostname
+    if not host:
+        return ""
+
+    try:
+        ip = ipaddress.ip_address(host)
+    except ValueError:
+        return ""
+
+    if not ip.is_private or ip.is_loopback:
+        return ""
+
+    if parsed.username:
+        auth = parsed.username
+        if parsed.password:
+            auth += f":{parsed.password}"
+        netloc = f"{auth}@localhost"
+    else:
+        netloc = "localhost"
+    if parsed.port is not None:
+        netloc += f":{parsed.port}"
+
+    return urlunparse(parsed._replace(netloc=netloc))
+
+
+def _env_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    normalized = value.strip().lower()
+    if normalized in {"1", "true", "yes", "on"}:
+        return True
+    if normalized in {"0", "false", "no", "off"}:
+        return False
+    return default
+
+
+def _should_verify_ssl(webhook_url: str) -> bool:
+    # Explicit env var wins. If unset, allow self-signed certs on local/private hosts.
+    if "N8N_VERIFY_SSL" in os.environ:
+        return _env_bool("N8N_VERIFY_SSL", True)
+
+    parsed = urlparse(webhook_url)
+    if parsed.scheme == "https" and _is_local_url(webhook_url):
+        return False
+    if parsed.scheme == "http" and _is_local_url(webhook_url):
+        return False
+    return True
+
+
+def _parse_webhook_response(response: requests.Response):
+    if not response.text.strip():
+        return {
+            "message": (
+                "Webhook call succeeded, but n8n returned an empty response body. "
+                "Add/adjust a 'Respond to Webhook' node if you want structured output."
+            )
+        }
+    try:
+        return response.json()
+    except ValueError:
+        return {"raw_response": response.text}
+
+
+def _build_webhook_payload(user_input: str) -> dict:
+    # Include common aliases so n8n workflows that read different field names still work.
+    return {
+        "url": user_input,
+        "target": user_input,
+        "input": user_input,
+        "target_url": user_input,
+        "ioc": user_input,
+    }
+
+
+def build_webhook_candidates():
+    webhook_url = os.getenv("N8N_WEBHOOK_URL", DEFAULT_N8N_WEBHOOK_URL).strip()
+    webhook_url_test = os.getenv(
+        "N8N_WEBHOOK_URL_TEST", DEFAULT_N8N_WEBHOOK_URL_TEST
+    ).strip()
+    workflow_url = os.getenv("N8N_WORKFLOW_URL", "").strip()
+    prefer_test_webhook = _env_bool("N8N_PREFER_TEST_WEBHOOK", True)
+
+    if prefer_test_webhook:
+        configured_values = [webhook_url_test, webhook_url, *_from_workflow_url(workflow_url)]
+    else:
+        configured_values = [webhook_url, webhook_url_test, *_from_workflow_url(workflow_url)]
+    candidates = []
+    for value in configured_values:
+        value = _normalized(value)
+        if not value:
+            continue
+        variants = [value]
+        port_variant = _url_with_default_n8n_port(value)
+        if port_variant:
+            variants.append(port_variant)
+        localhost_variant = _url_with_localhost_alias(value)
+        if localhost_variant:
+            variants.append(localhost_variant)
+            localhost_port_variant = _url_with_default_n8n_port(localhost_variant)
+            if localhost_port_variant:
+                variants.append(localhost_port_variant)
+
+        if "/webhook/" in value:
+            variants.append(value.replace("/webhook/", "/webhook-test/"))
+            if port_variant:
+                variants.append(port_variant.replace("/webhook/", "/webhook-test/"))
+        elif "/webhook-test/" in value:
+            variants.append(value.replace("/webhook-test/", "/webhook/"))
+            if port_variant:
+                variants.append(port_variant.replace("/webhook-test/", "/webhook/"))
+
+        for candidate in variants:
+            candidates.append(candidate)
+            # Try alternate scheme only for non-local hosts.
+            if not _is_local_url(candidate):
+                if candidate.startswith("https://"):
+                    candidates.append("http://" + candidate[len("https://") :])
+                elif candidate.startswith("http://"):
+                    candidates.append("https://" + candidate[len("http://") :])
+
+    # Keep a deterministic local fallback only when nothing is configured.
+    if not candidates:
+        candidates.extend([DEFAULT_N8N_WEBHOOK_URL_TEST, DEFAULT_N8N_WEBHOOK_URL])
+    return list(dict.fromkeys(candidates))
 
 
 class ThreatScopeGUI:
@@ -38,6 +237,7 @@ class ThreatScopeGUI:
         self.config_manager = ConfigManager()
         self.scanner = None
         self.current_result = None
+        self.latest_n8n_result = None
         self.scanning = False
 
         self.setup_styles()
@@ -107,6 +307,8 @@ class ThreatScopeGUI:
             background=self.BG_PRIMARY,
             foreground=self.ACCENT_GREEN,
         )
+        
+    
 
     def build_ui(self):
         """Build the complete UI"""
@@ -242,6 +444,10 @@ class ThreatScopeGUI:
         ttk.Checkbutton(
             check_frame, text="Hybrid Analysis", variable=self.ha_enabled
         ).pack(side=tk.LEFT, padx=5)
+        self.n8n_enabled = tk.BooleanVar(value=True)
+        ttk.Checkbutton(check_frame, text="n8n Workflow", variable=self.n8n_enabled).pack(
+            side=tk.LEFT, padx=5
+        )
 
         # Scan button
         self.scan_button = ttk.Button(
@@ -408,6 +614,102 @@ class ThreatScopeGUI:
                 text=Path(filename).name, foreground=self.ACCENT_GREEN
             )
 
+    def scan_url(self, user_input):
+        webhook_candidates = build_webhook_candidates()
+        seen = set()
+        last_error = None
+        attempts = []
+        payload = _build_webhook_payload(user_input)
+
+        for webhook_url in webhook_candidates:
+            if webhook_url in seen:
+                continue
+            seen.add(webhook_url)
+
+            try:
+                verify_ssl = _should_verify_ssl(webhook_url)
+                response = requests.post(
+                    webhook_url,
+                    params=payload,
+                    json=payload,
+                    timeout=30,
+                    verify=verify_ssl,
+                )
+            except requests.RequestException as e:
+                last_error = f"{type(e).__name__}: {str(e)}"
+                attempts.append(
+                    {
+                        "endpoint": webhook_url,
+                        "result": "request_error",
+                        "detail": last_error,
+                        "verify_ssl": verify_ssl,
+                    }
+                )
+                continue
+
+            if 200 <= response.status_code < 300:
+                body = _parse_webhook_response(response)
+                return {
+                    "endpoint": webhook_url,
+                    "status_code": response.status_code,
+                    "body": body,
+                    "attempts": attempts
+                    + [
+                        {
+                            "endpoint": webhook_url,
+                            "result": "success",
+                            "status_code": response.status_code,
+                            "verify_ssl": verify_ssl,
+                        }
+                    ],
+                }
+
+            # 404 often means wrong n8n mode (test vs active). Try next candidate.
+            if response.status_code == 404:
+                last_error = f"404 Not Found on {webhook_url}"
+                attempts.append(
+                    {
+                        "endpoint": webhook_url,
+                        "result": "http_404",
+                        "detail": last_error,
+                        "verify_ssl": verify_ssl,
+                    }
+                )
+                continue
+
+            try:
+                error_body = response.json()
+            except ValueError:
+                error_body = response.text
+            return {
+                "endpoint": webhook_url,
+                "status_code": response.status_code,
+                "error": error_body,
+                "attempts": attempts
+                + [
+                    {
+                        "endpoint": webhook_url,
+                        "result": "http_error",
+                        "status_code": response.status_code,
+                        "verify_ssl": verify_ssl,
+                    }
+                ],
+            }
+
+        return {
+            "error": f"n8n request failed: {last_error or 'unknown error'}",
+            "hint": "Ensure n8n is running and, for /webhook-test/*, click 'Listen for test event' before scanning. Set N8N_PREFER_TEST_WEBHOOK=false to prioritize /webhook/* and set N8N_VERIFY_SSL=true to force certificate verification.",
+            "attempts": attempts,
+        }
+
+    def send_to_n8n(self):
+        user_input = self.url_entry.get().strip()
+        result = self.scan_url(user_input)
+        self.results_text.config(state=tk.NORMAL)
+        self.results_text.delete(1.0, tk.END)
+        self.results_text.insert(tk.END, str(result))
+        self.results_text.config(state=tk.DISABLED)
+
     def start_scan(self):
         """Start scanning in background thread"""
         if self.scanning:
@@ -440,8 +742,11 @@ class ThreatScopeGUI:
         if self.ha_enabled.get():
             engines.add("ha")
 
-        if not engines:
-            messagebox.showerror("Error", "Select at least one scanning engine")
+        use_n8n = self.n8n_enabled.get()
+        if not engines and not use_n8n:
+            messagebox.showerror(
+                "Error", "Select at least one scanning engine or enable n8n workflow"
+            )
             return
 
         # Check API keys
@@ -463,25 +768,39 @@ class ThreatScopeGUI:
         self.progress.start()
 
         thread = threading.Thread(
-            target=self.run_scan, args=(target, engines, vt_key, ha_key)
+            target=self.run_scan, args=(target, engines, vt_key, ha_key, use_n8n)
         )
         thread.daemon = True
         thread.start()
 
-    def run_scan(self, target, engines, vt_key, ha_key):
+    def run_scan(self, target, engines, vt_key, ha_key, use_n8n):
         """Run scan (executed in background thread)"""
         try:
-            self.scanner = ThreatScopeScanner(vt_key, ha_key)
-            self.root.after(0, self.display_status, "Scanning target...")
+            self.latest_n8n_result = None
+            result = None
 
-            result = self.scanner.scan(target, engines)
-            self.current_result = result
+            if engines:
+                self.scanner = ThreatScopeScanner(vt_key, ha_key)
+                self.root.after(0, self.display_status, "Scanning target...")
 
-            # Save to history
-            self.config_manager.add_to_history(result)
+                result = self.scanner.scan(target, engines)
+                self.current_result = result
+
+                # Save to history
+                self.config_manager.add_to_history(result)
+
+            if use_n8n:
+                self.root.after(0, self.display_status, "Sending to n8n workflow...")
+                try:
+                    self.latest_n8n_result = self.scan_url(target)
+                except Exception as e:
+                    self.latest_n8n_result = {"error": f"n8n Error: {str(e)}"}
 
             # Display results
-            self.root.after(0, self.display_result, result)
+            if result:
+                self.root.after(0, self.display_result, result)
+            else:
+                self.root.after(0, self.display_n8n_only_result, target)
 
         except Exception as e:
             self.root.after(0, self.display_error, str(e))
@@ -590,6 +909,37 @@ class ThreatScopeGUI:
                     self.results_text.insert(
                         tk.END, f"  Tags: {', '.join(result.ha.tags[:5])}\n\n"
                     )
+
+        if self.latest_n8n_result is not None:
+            self.results_text.insert(tk.END, "🧩 n8n Workflow\n", "header")
+            self.results_text.insert(
+                tk.END, json.dumps(self.latest_n8n_result, indent=2) + "\n"
+            )
+
+        self.results_text.config(state=tk.DISABLED)
+
+    def display_n8n_only_result(self, target: str):
+        """Display n8n-only result"""
+        self.results_text.config(state=tk.NORMAL)
+        self.results_text.delete(1.0, tk.END)
+
+        self.results_text.insert(tk.END, "🧩 n8n Workflow Only\n", "header")
+        self.results_text.insert(tk.END, "=" * 70 + "\n\n")
+        self.results_text.insert(tk.END, "🎯 Target: ", "header")
+        self.results_text.insert(tk.END, f"{target}\n\n")
+        self.results_text.insert(tk.END, "📅 Time: ", "header")
+        self.results_text.insert(tk.END, f"{datetime.now().isoformat()}\n\n")
+
+        if self.latest_n8n_result is not None:
+            self.results_text.insert(tk.END, "-" * 70 + "\n\n")
+            self.results_text.insert(tk.END, "🧩 n8n Workflow\n", "header")
+            self.results_text.insert(
+                tk.END, json.dumps(self.latest_n8n_result, indent=2) + "\n"
+            )
+        else:
+            self.results_text.insert(
+                tk.END, "No n8n response received.\n", "danger"
+            )
 
         self.results_text.config(state=tk.DISABLED)
 
