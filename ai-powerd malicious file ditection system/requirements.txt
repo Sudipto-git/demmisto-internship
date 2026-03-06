@@ -1,0 +1,19 @@
+# ─────────────────────────────────────────
+#  DARKWEB MONITOR — Requirements
+# ─────────────────────────────────────────
+
+# Core
+flask==3.0.0
+flask-cors==4.0.0
+requests==2.31.0
+python-dotenv==1.0.0
+
+# PDF Report
+reportlab==4.1.0
+
+# WhatsApp + SMS (Twilio)
+twilio==8.13.0
+
+# HTML Parsing (Pastebin monitor)
+beautifulsoup4==4.12.3
+lxml==5.1.0
