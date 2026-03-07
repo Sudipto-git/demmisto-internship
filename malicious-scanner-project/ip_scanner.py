@@ -1,7 +1,7 @@
 """
 ╔══════════════════════════════════════════╗
 ║   MODULE: IP Address Scanner            ║
-║   Tools: nmap, VirusTotal               ║
+║   Tools : nmap, VirusTotal              ║
 ╚══════════════════════════════════════════╝
 """
 
@@ -17,28 +17,19 @@ log = logging.getLogger(__name__)
 
 
 def scan_ip(target: str) -> dict:
-    """Full IP scan — Nmap + VirusTotal + Reverse DNS"""
-
     log.info(f"[IP] Scanning: {target}")
     result = {
-        "ip":         target,
-        "scan_date":  datetime.utcnow().isoformat(),
-        "nmap":       {},
-        "virustotal": {},
-        "reverse_dns": "N/A",
+        "ip":           target,
+        "scan_date":    datetime.utcnow().isoformat(),
+        "nmap":         {},
+        "virustotal":   {},
+        "reverse_dns":  "N/A",
         "threat_level": "UNKNOWN"
     }
 
-    # ── Nmap ──────────────────────────────────────────
-    result["nmap"] = _run_nmap(target)
-
-    # ── VirusTotal ────────────────────────────────────
-    result["virustotal"] = _vt_ip(target)
-
-    # ── Reverse DNS ───────────────────────────────────
+    result["nmap"]        = _run_nmap(target)
+    result["virustotal"]  = _vt_ip(target)
     result["reverse_dns"] = _reverse_dns(target)
-
-    # ── Threat Level ──────────────────────────────────
     result["threat_level"] = _calc_threat(result)
 
     log.info(f"[IP] Done. Threat: {result['threat_level']}")
@@ -80,12 +71,11 @@ def _vt_ip(target: str) -> dict:
             headers=headers, timeout=15
         )
         if response.status_code != 200:
-            return {"error": f"VT API returned {response.status_code}"}
+            return {"error": f"VT returned {response.status_code}"}
 
         attrs     = response.json().get("data", {}).get("attributes", {})
         stats     = attrs.get("last_analysis_stats", {})
         malicious = stats.get("malicious", 0)
-
         return {
             "malicious":    malicious,
             "suspicious":   stats.get("suspicious", 0),
@@ -111,8 +101,8 @@ def _calc_threat(result: dict) -> str:
     vt = result.get("virustotal", {}).get("threat_level", "CLEAN")
     if vt in ["CRITICAL", "HIGH"]:
         return vt
-    ports = result.get("nmap", {}).get("open_ports", [])
     risky = {"21", "23", "445", "3389", "4444", "6666", "31337"}
+    ports = result.get("nmap", {}).get("open_ports", [])
     if any(p["port"] in risky for p in ports):
         return "HIGH"
     if len(ports) > 10:

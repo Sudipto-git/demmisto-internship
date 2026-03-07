@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DARKWEB MONITOR v2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&family=VT323&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:       #020806;
+  --panel:    #030d07;
+  --green:    #00ff41;
+  --green2:   #00cc33;
+  --green3:   #005918;
+  --dim:      #071a0c;
+  --red:      #ff2020;
+  --orange:   #ff8c00;
+  --yellow:   #ffe000;
+  --cyan:     #00e5ff;
+  --text:     #a8ffb8;
+  --textdim:  #3a6644;
+  --border:   #0a2912;
+  --border2:  #0f3d1a;
+  --glow:     0 0 12px #00ff4144, 0 0 40px #00ff4111;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Share Tech Mono',monospace;min-height:100vh;overflow-x:hidden;cursor:crosshair}
+body::before{content:'';position:fixed;inset:0;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,65,.012) 2px,rgba(0,255,65,.012) 4px);pointer-events:none}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border2);background:linear-gradient(90deg,#010603,#020a05);position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:16px}
+.logo-icon{width:36px;height:36px;border:2px solid var(--green);display:grid;place-items:center;font-size:1.1rem;box-shadow:var(--glow);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:var(--glow)}50%{box-shadow:none}}
+.logo-text{font-family:'Orbitron',monospace;font-weight:900;font-size:1.1rem;color:var(--green);letter-spacing:4px;text-shadow:var(--glow)}
+.logo-sub{font-size:.58rem;color:var(--textdim);letter-spacing:5px;margin-top:2px}
+.header-right{display:flex;align-items:center;gap:20px}
+.api-status{display:flex;align-items:center;gap:7px;font-size:.68rem;color:var(--textdim)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--green3);transition:background .3s,box-shadow .3s}
+.dot.online{background:var(--green);box-shadow:0 0 8px var(--green)}
+.dot.offline{background:var(--red);box-shadow:0 0 8px var(--red)}
+.clock{font-family:'VT323',monospace;font-size:1.3rem;color:var(--green2);letter-spacing:2px}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:340px 1fr;grid-template-rows:auto 1fr;height:calc(100vh - 65px)}
+
+/* SIDEBAR */
+.sidebar{grid-row:1/3;border-right:1px solid var(--border2);display:flex;flex-direction:column;overflow-y:auto}
+.sidebar-section{padding:18px 20px;border-bottom:1px solid var(--border)}
+.section-label{font-size:.6rem;color:var(--green3);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border2),transparent)}
+.cfg-input{width:100%;background:#010603;border:1px solid var(--border2);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.72rem;padding:8px 10px;margin-bottom:8px;outline:none;transition:border-color .2s}
+.cfg-input:focus{border-color:var(--green)}
+.cfg-input::placeholder{color:var(--textdim)}
+.type-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:2px}
+.type-tab{background:transparent;border:1px solid var(--border2);color:var(--textdim);font-family:'Share Tech Mono',monospace;font-size:.68rem;padding:8px 6px;cursor:pointer;letter-spacing:1px;transition:all .15s;text-align:center}
+.type-tab:hover{border-color:var(--green3);color:var(--green2)}
+.type-tab.active{border-color:var(--green);color:var(--green);background:rgba(0,255,65,.06)}
+.target-input{width:100%;background:#010603;border:1px solid var(--border2);border-left:3px solid var(--green3);color:var(--green);font-family:'Share Tech Mono',monospace;font-size:.85rem;padding:11px 12px;outline:none;transition:all .2s;margin-top:12px}
+.target-input:focus{border-color:var(--green);border-left-color:var(--green);box-shadow:var(--glow)}
+.target-input::placeholder{color:var(--textdim);font-size:.75rem}
+.paste-opts{display:none;margin-top:10px}
+.paste-opts.show{display:block}
+.paste-opts textarea{width:100%;background:#010603;border:1px solid var(--border2);color:var(--text);font-family:'Share Tech Mono',monospace;font-size:.7rem;padding:8px 10px;outline:none;resize:vertical;min-height:60px}
+.paste-opts textarea:focus{border-color:var(--green)}
+.scan-btn{width:100%;margin-top:14px;background:var(--green);color:#000;border:none;font-family:'Orbitron',monospace;font-weight:700;font-size:.8rem;letter-spacing:3px;padding:13px;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%)}
+.scan-btn:hover{background:#fff;box-shadow:var(--glow)}
+.scan-btn:disabled{background:var(--green3);cursor:not-allowed;color:#001a08}
+.progress-bar{height:2px;margin-top:8px;background:var(--dim);overflow:hidden}
+.progress-fill{height:100%;width:0;background:linear-gradient(90deg,transparent,var(--green),transparent)}
+.progress-fill.running{animation:sweep 1.2s linear infinite;width:100%}
+@keyframes sweep{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.history-list{display:flex;flex-direction:column;gap:6px}
+.history-item{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;border:1px solid var(--border);background:#010603;cursor:pointer;font-size:.68rem;transition:border-color .15s}
+.history-item:hover{border-color:var(--green3)}
+.hi-target{color:var(--text);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hi-level{font-size:.6rem;padding:2px 6px;border:1px solid;letter-spacing:1px}
+.hi-critical{color:var(--red);border-color:var(--red)}
+.hi-high{color:var(--orange);border-color:var(--orange)}
+.hi-medium{color:var(--yellow);border-color:var(--yellow)}
+.hi-clean{color:var(--green);border-color:var(--green)}
+.hi-unknown{color:var(--textdim);border-color:var(--textdim)}
+
+/* MAIN */
+.main-top{border-bottom:1px solid var(--border2)}
+.terminal{background:#010603;height:120px;overflow-y:auto;padding:10px 16px;font-size:.72rem;position:relative}
+.terminal-label{position:absolute;top:8px;right:12px;font-size:.58rem;color:var(--green3);letter-spacing:3px}
+.tl{padding:1px 0;display:flex;gap:10px}
+.tl-ts{color:var(--green3);flex-shrink:0}
+.tl-msg{color:var(--textdim)}
+.tl.ok .tl-msg{color:var(--green2)}
+.tl.err .tl-msg{color:var(--red)}
+.tl.warn .tl-msg{color:var(--yellow)}
+.tl.info .tl-msg{color:var(--cyan)}
+.results-area{padding:20px;overflow-y:auto;height:calc(100vh - 65px - 120px - 1px)}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:var(--textdim)}
+.empty-big{font-family:'VT323',monospace;font-size:4rem;color:var(--green3);animation:blink 1.5s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+.empty-sub{font-size:.7rem;letter-spacing:4px}
+
+/* RESULTS */
+.results-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;animation:fadeUp .4s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card{border:1px solid var(--border2);background:var(--panel);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%)}
+.card.full{grid-column:1/-1}
+.card.threat-critical{border-color:rgba(255,32,32,.3)}
+.card.threat-high{border-color:rgba(255,140,0,.3)}
+.card.threat-medium{border-color:rgba(255,224,0,.3)}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:9px 14px;border-bottom:1px solid var(--border);background:rgba(0,255,65,.02)}
+.card-title{font-family:'Orbitron',monospace;font-size:.62rem;color:var(--green2);letter-spacing:2px}
+.badge{font-size:.58rem;padding:2px 8px;border:1px solid;letter-spacing:2px}
+.badge-critical{color:var(--red);border-color:var(--red);background:rgba(255,32,32,.08)}
+.badge-high{color:var(--orange);border-color:var(--orange);background:rgba(255,140,0,.08)}
+.badge-medium{color:var(--yellow);border-color:var(--yellow);background:rgba(255,224,0,.08)}
+.badge-clean{color:var(--green);border-color:var(--green);background:rgba(0,255,65,.08)}
+.badge-unknown{color:var(--textdim);border-color:var(--textdim)}
+.card-body{padding:14px}
+.dr{display:flex;justify-content:space-between;align-items:flex-start;padding:5px 0;border-bottom:1px solid rgba(10,41,18,.6);gap:10px}
+.dr:last-child{border-bottom:none}
+.dr-k{color:var(--textdim);font-size:.68rem;letter-spacing:1px;flex-shrink:0}
+.dr-v{color:var(--text);font-size:.75rem;text-align:right;word-break:break-all}
+.dr-v.critical{color:var(--red)}
+.dr-v.high{color:var(--orange)}
+.dr-v.medium{color:var(--yellow)}
+.dr-v.clean{color:var(--green)}
+.meter-wrap{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+.meter-bar{flex:1;height:5px;background:var(--dim)}
+.meter-fill{height:100%;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.meter-fill.critical{background:var(--red);box-shadow:0 0 8px rgba(255,32,32,.6)}
+.meter-fill.high{background:var(--orange)}
+.meter-fill.medium{background:var(--yellow)}
+.meter-fill.clean{background:var(--green)}
+.meter-pct{font-size:.72rem;color:var(--textdim)}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.tag{border:1px solid var(--border2);color:var(--green2);font-size:.65rem;padding:2px 8px;clip-path:polygon(0 0,calc(100% - 5px) 0,100% 5px,100% 100%,0 100%)}
+.tag a{color:inherit;text-decoration:none}
+.tag a:hover{text-decoration:underline}
+.ai-text{font-size:.78rem;line-height:1.85;color:var(--text);white-space:pre-wrap}
+.ai-text strong{color:var(--green)}
+.alert-row{display:flex;align-items:center;gap:8px;padding:6px 10px;margin-top:6px;border:1px solid var(--border2);font-size:.7rem}
+.alert-row.sent{border-color:rgba(0,255,65,.3);color:var(--green2)}
+.alert-row.skip{color:var(--textdim)}
+.pdf-btn{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:transparent;border:1px solid var(--green3);color:var(--green2);font-family:'Share Tech Mono',monospace;font-size:.7rem;letter-spacing:2px;padding:7px 14px;cursor:pointer;transition:all .2s;clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,0 100%)}
+.pdf-btn:hover{border-color:var(--green);color:var(--green);box-shadow:var(--glow)}
+.email-item{color:var(--cyan);font-size:.72rem;padding:2px 0}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--green3)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-wrap">
+    <div class="logo-icon">◈</div>
+    <div>
+      <div class="logo-text">DARKWEB MONITOR</div>
+      <div class="logo-sub">OSINT &amp; THREAT INTELLIGENCE PLATFORM v2.0</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="api-status">
+      <div class="dot" id="apiDot"></div>
+      <span id="apiStatusText">CHECKING...</span>
+    </div>
+    <div class="clock" id="clock">00:00:00</div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="section-label">API Config</div>
+      <input class="cfg-input" id="apiBase"   value="http://localhost:5001" placeholder="API Base URL"/>
+      <input class="cfg-input" id="apiSecret" value="darkweb_secret_2024"   placeholder="X-API-Secret"/>
+      <button onclick="checkHealth()" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--textdim);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:7px;cursor:pointer;letter-spacing:2px;margin-top:0" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border2)'">⟳ CHECK CONNECTION</button>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="section-label">Scan Type</div>
+      <div class="type-tabs">
+        <button class="type-tab active" data-type="domain"   onclick="setType('domain')">◈ DOMAIN</button>
+        <button class="type-tab"        data-type="ip"       onclick="setType('ip')">⬢ IP ADDR</button>
+        <button class="type-tab"        data-type="paste"    onclick="setType('paste')">⬡ PASTE</button>
+        <button class="type-tab"        data-type="full"     onclick="setType('full')">★ FULL</button>
+      </div>
+      <input class="target-input" id="targetInput" placeholder="example.com" onkeydown="if(event.key==='Enter')runScan()"/>
+      <div class="paste-opts" id="pasteOpts">
+        <div style="font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin:8px 0 4px">KEYWORDS</div>
+        <textarea id="pasteKeywords">password,leaked,hack,breach,credentials,dump</textarea>
+        <div style="font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin:6px 0 4px">WATCH DOMAINS</div>
+        <textarea id="pasteDomains" style="min-height:40px" placeholder="yourdomain.com"></textarea>
+      </div>
+      <button class="scan-btn" id="scanBtn" onclick="runScan()">▶ INITIATE SCAN</button>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="sidebar-section" style="flex:1">
+      <div class="section-label">Scan History</div>
+      <div class="history-list" id="historyList">
+        <div style="font-size:.65rem;color:var(--textdim);text-align:center;padding:16px">No scans yet</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-top">
+    <div class="terminal" id="terminal">
+      <span class="terminal-label">SYSTEM LOG</span>
+      <div class="tl info"><span class="tl-ts">[BOOT]</span><span class="tl-msg">DARKWEB MONITOR v2.0 initializing...</span></div>
+      <div class="tl ok">  <span class="tl-ts">[SYS]</span> <span class="tl-msg">Modules: domain_osint, ip_scanner, paste_monitor, ai_analyst</span></div>
+      <div class="tl ok">  <span class="tl-ts">[SYS]</span> <span class="tl-msg">Alerts: telegram | Reports: pdf</span></div>
+      <div class="tl info"><span class="tl-ts">[RDY]</span> <span class="tl-msg">Ready. Select scan type and enter target.</span></div>
+    </div>
+  </div>
+
+  <div class="results-area" id="resultsArea">
+    <div class="empty">
+      <div class="empty-big">_</div>
+      <div class="empty-sub">AWAITING TARGET INPUT</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentType = 'domain';
+let scanHistory = [];
+
+const placeholders = {
+  domain:'example.com', ip:'8.8.8.8',
+  paste:'(no target needed — monitors pastebin)', full:'example.com or 8.8.8.8'
+};
+
+// Clock
+setInterval(()=>{ document.getElementById('clock').textContent = new Date().toTimeString().split(' ')[0]; },1000);
+
+// Health check
+async function checkHealth(){
+  const base=document.getElementById('apiBase').value.trim();
+  const dot=document.getElementById('apiDot'), txt=document.getElementById('apiStatusText');
+  try{
+    const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(4000)});
+    if(r.ok){ dot.className='dot online'; txt.textContent='API ONLINE'; tlog('API connection verified ✓','ok'); }
+    else throw new Error();
+  }catch{ dot.className='dot offline'; txt.textContent='API OFFLINE'; tlog(`Cannot reach ${base}`,'err'); }
+}
+checkHealth();
+setInterval(checkHealth,15000);
+
+// Type selector
+function setType(type){
+  currentType=type;
+  document.querySelectorAll('.type-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`[data-type="${type}"]`).classList.add('active');
+  document.getElementById('targetInput').placeholder=placeholders[type];
+  document.getElementById('pasteOpts').classList.toggle('show', type==='paste');
+  if(type==='paste') document.getElementById('targetInput').value='';
+}
+
+// Terminal log
+function tlog(msg,type=''){
+  const t=document.getElementById('terminal');
+  const ts=new Date().toTimeString().split(' ')[0];
+  const row=document.createElement('div');
+  row.className=`tl ${type}`;
+  row.innerHTML=`<span class="tl-ts">[${ts}]</span><span class="tl-msg">${msg}</span>`;
+  t.appendChild(row); t.scrollTop=t.scrollHeight;
+}
+
+// Main scan
+async function runScan(){
+  const base=document.getElementById('apiBase').value.trim();
+  const secret=document.getElementById('apiSecret').value.trim();
+  const target=document.getElementById('targetInput').value.trim();
+  const type=currentType;
+  if(type!=='paste'&&!target){tlog('ERROR: No target entered','err');return;}
+  const btn=document.getElementById('scanBtn');
+  const prog=document.getElementById('progressFill');
+  btn.disabled=true; btn.textContent='⟳ SCANNING...'; prog.classList.add('running');
+  tlog(`Starting ${type.toUpperCase()} scan${target?' → '+target:''}...`,'info');
+  const headers={'Content-Type':'application/json','X-API-Secret':secret};
+  try{
+    if(type==='full'){
+      tlog('Running full pipeline: scan + AI + PDF + Telegram...','info');
+      const scanType=target.match(/^\d{1,3}(\.\d{1,3}){3}$/)? 'ip':'domain';
+      const r=await fetch(`${base}/api/scan/full`,{method:'POST',headers,body:JSON.stringify({target,type:scanType})});
+      const full=await r.json();
+      tlog(`Full scan complete — ${full.threat_level}`,full.threat_level==='CLEAN'?'ok':'warn');
+      renderFull(full,base); addHistory(target,full.threat_level); return;
+    }
+    let body={},endpoint='';
+    if(type==='domain'){endpoint='domain';body={domain:target};}
+    else if(type==='ip'){endpoint='ip';body={ip:target};}
+    else{
+      endpoint='paste';
+      body={
+        keywords:document.getElementById('pasteKeywords').value.split(',').map(k=>k.trim()).filter(Boolean),
+        domains:document.getElementById('pasteDomains').value.split(',').map(d=>d.trim()).filter(Boolean)
+      };
+    }
+    tlog(`Calling /api/scan/${endpoint}...`);
+    const r1=await fetch(`${base}/api/scan/${endpoint}`,{method:'POST',headers,body:JSON.stringify(body)});
+    const scanData=await r1.json();
+    tlog('Scan complete.','ok');
+    tlog('Sending to Groq AI...');
+    const r2=await fetch(`${base}/api/analyze`,{method:'POST',headers,body:JSON.stringify({scan_result:scanData,target_type:endpoint})});
+    const aiData=await r2.json();
+    tlog(`AI done (${aiData.tokens_used||'?'} tokens)`,'ok');
+    const tl=scanData.threat_level||scanData.virustotal?.threat_level||'UNKNOWN';
+    renderResults(scanData,aiData,type,target);
+    addHistory(target||'paste',tl);
+  }catch(err){
+    tlog(`ERROR: ${err.message}`,'err');
+    document.getElementById('resultsArea').innerHTML=`<div class="empty"><div style="color:var(--red);font-size:1.5rem">⚠</div><div style="color:var(--red);letter-spacing:3px;font-size:.8rem">CONNECTION FAILED</div><div style="color:var(--textdim);font-size:.7rem">${err.message}</div></div>`;
+  }finally{
+    btn.disabled=false; btn.textContent='▶ INITIATE SCAN'; prog.classList.remove('running');
+  }
+}
+
+function renderResults(scan,ai,type,target){
+  const tl=(scan.threat_level||scan.virustotal?.threat_level||'UNKNOWN').toLowerCase();
+  let left='';
+  if(type==='domain'){
+    const vt=scan.virustotal||{};
+    const pct=Math.min(100,(vt.malicious||0)*10);
+    left=card('DOMAIN OSINT',tl,`
+      ${meter(pct,tl)}
+      ${dr('Domain',scan.domain)}
+      ${dr('Resolved IP',scan.dns?.resolved_ip||'N/A')}
+      ${dr('Registrar',scan.whois?.registrar||'N/A')}
+      ${dr('Created',scan.whois?.created||'N/A')}
+      ${dr('Expires',scan.whois?.expires||'N/A')}
+      ${dr('VT Malicious',`<span class="${tl}">${vt.malicious||0}</span>`)}
+      ${dr('Emails Found',scan.harvester?.total_emails||0)}
+      ${scan.harvester?.emails_found?.length?`<div style="margin-top:8px">${scan.harvester.emails_found.map(e=>`<div class="email-item">${e}</div>`).join('')}</div>`:''}
+      ${vt.vt_link?`<a href="${vt.vt_link}" target="_blank" style="display:block;margin-top:10px;color:var(--green2);font-size:.68rem;letter-spacing:2px">↗ VIRUSTOTAL</a>`:''}
+    `);
+  }else if(type==='ip'){
+    const vt=scan.virustotal||{};
+    const ports=scan.nmap?.open_ports||[];
+    const pct=Math.min(100,(vt.malicious||0)*8);
+    left=card('IP SCANNER',tl,`
+      ${meter(pct,tl)}
+      ${dr('IP',scan.ip)}
+      ${dr('Reverse DNS',scan.reverse_dns||'N/A')}
+      ${dr('Country',vt.country||'N/A')}
+      ${dr('AS Owner',vt.as_owner||'N/A')}
+      ${dr('VT Malicious',`<span class="${tl}">${vt.malicious||0}</span>`)}
+      ${dr('Open Ports',scan.nmap?.total_open||0)}
+      ${ports.length?`<div class="tags">${ports.map(p=>`<span class="tag">${p.port}/${p.service}</span>`).join('')}</div>`:''}
+      ${vt.vt_link?`<a href="${vt.vt_link}" target="_blank" style="display:block;margin-top:10px;color:var(--green2);font-size:.68rem;letter-spacing:2px">↗ VIRUSTOTAL</a>`:''}
+    `);
+  }else{
+    const matches=scan.matches||[];
+    left=card('PASTE MONITOR',tl,`
+      ${dr('Total Matches',scan.total_matches||0)}
+      ${dr('Keywords',( scan.keywords_used||[]).join(', '))}
+      ${dr('Scan Date',scan.scan_date?.slice(0,19)||'N/A')}
+      ${matches.length?matches.map(m=>`
+        <div style="margin-top:8px;padding:8px;border:1px solid var(--border2);background:#010603">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <a href="${m.paste_url}" target="_blank" style="color:var(--cyan);font-size:.65rem">${m.paste_url}</a>
+            <span class="badge badge-${m.severity?.toLowerCase()}">${m.severity}</span>
+          </div>
+          <div style="font-size:.65rem;color:var(--textdim)">Match: ${m.matched_keywords?.join(', ')}</div>
+          <div style="font-size:.63rem;color:var(--textdim);margin-top:3px">${(m.snippet||'').slice(0,120)}...</div>
+        </div>`).join(''):'<div style="color:var(--textdim);font-size:.72rem;margin-top:8px">No matches — CLEAN</div>'}
+    `);
+  }
+  document.getElementById('resultsArea').innerHTML=`<div class="results-grid">${left}${aiCard(ai)}</div>`;
+}
+
+function renderFull(full,base){
+  const tl=(full.threat_level||'UNKNOWN').toLowerCase();
+  const alerts=full.alerts_sent||{};
+  const tgSent=alerts.telegram?.status==='sent';
+  const pdfUrl=full.pdf_url;
+  document.getElementById('resultsArea').innerHTML=`<div class="results-grid">
+    <div class="card threat-${tl}">
+      <div class="card-head">
+        <span class="card-title">FULL SCAN REPORT</span>
+        <span class="badge badge-${tl}">${full.threat_level}</span>
+      </div>
+      <div class="card-body">
+        ${meter(tl==='critical'?95:tl==='high'?70:tl==='medium'?45:10,tl)}
+        ${dr('Scan ID',`<code style="color:var(--cyan)">${full.scan_id}</code>`)}
+        ${dr('Target',full.target)}
+        ${dr('Type',full.target_type?.toUpperCase())}
+        ${dr('Threat Level',`<span class="${tl}">${full.threat_level}</span>`)}
+        ${dr('Completed',full.completed_at?.slice(0,19))}
+        ${dr('AI Model',full.model)}
+        ${dr('Tokens',full.tokens_used)}
+        <div style="margin-top:12px;font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin-bottom:4px">ALERTS</div>
+        <div class="alert-row ${tgSent?'sent':'skip'}">${tgSent?'✓ Telegram alert sent':'— '+(alerts.telegram?.reason||alerts.reason||'No alert needed')}</div>
+        ${pdfUrl?`<a href="${base}${pdfUrl}" target="_blank"><button class="pdf-btn">📄 DOWNLOAD PDF REPORT</button></a>`:''}
+      </div>
+    </div>
+    ${aiCard({ai_analysis:full.ai_analysis,model:full.model,tokens_used:full.tokens_used})}
+  </div>`;
+}
+
+function card(title,tl,content){
+  return `<div class="card threat-${tl}">
+    <div class="card-head"><span class="card-title">${title}</span><span class="badge badge-${tl}">${tl.toUpperCase()}</span></div>
+    <div class="card-body">${content}</div>
+  </div>`;
+}
+function aiCard(ai){
+  if(!ai||ai.error) return `<div class="card"><div class="card-head"><span class="card-title">GROQ AI ANALYSIS</span></div><div class="card-body" style="color:var(--red)">${ai?.error||'No data'}</div></div>`;
+  const fmt=(ai.ai_analysis||'').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+  return `<div class="card">
+    <div class="card-head">
+      <span class="card-title">GROQ AI ANALYSIS</span>
+      <span style="font-size:.58rem;color:var(--textdim)">${ai.model||''} · ${ai.tokens_used||0} tkns</span>
+    </div>
+    <div class="card-body"><div class="ai-text">${fmt}</div></div>
+  </div>`;
+}
+function dr(k,v){ return `<div class="dr"><span class="dr-k">${k}</span><span class="dr-v">${v}</span></div>`; }
+function meter(pct,tl){ return `<div class="meter-wrap"><span style="font-size:.6rem;color:var(--textdim)">THREAT</span><div class="meter-bar"><div class="meter-fill ${tl}" style="width:${pct}%"></div></div><span class="meter-pct">${pct}%</span></div>`; }
+function addHistory(target,level){
+  const tl=(level||'unknown').toLowerCase();
+  scanHistory.unshift({target,level:level||'UNKNOWN',tl});
+  if(scanHistory.length>10) scanHistory.pop();
+  document.getElementById('historyList').innerHTML=scanHistory.map(h=>`
+    <div class="history-item">
+      <span class="hi-target">${h.target}</span>
+      <span class="hi-level hi-${h.tl}">${h.level}</span>
+    </div>`).join('');
+}
+</script>
+</body>
+</html>

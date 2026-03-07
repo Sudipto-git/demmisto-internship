@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: darkweb-monitor
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: VT_API_KEY
+        sync: false
+      - key: GROQ_API_KEY
+        sync: false
+      - key: API_SECRET
+        sync: false
+      - key: TG_ENABLED
+        value: "true"
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: PASTE_KEYWORDS
+        value: "password,leaked,hack,breach,credentials,dump,exploit"
+      - key: PASTE_DOMAINS
+        value: ""
+      - key: FLASK_PORT
+        value: "10000"

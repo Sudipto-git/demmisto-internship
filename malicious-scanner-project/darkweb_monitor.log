@@ -1,0 +1,289 @@
+2026-03-07 01:59:16,020 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 01:59:16,020 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 01:59:16,020 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 01:59:16,020 [INFO] 📡  http://0.0.0.0:5000
+2026-03-07 01:59:16,020 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:00:51,822 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 02:00:51,822 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 02:00:51,822 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 02:00:51,822 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 02:00:51,822 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:02:03,127 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 02:02:03,127 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 02:02:03,127 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 02:02:03,127 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 02:02:03,127 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:03:48,455 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 02:03:48,456 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 02:03:48,456 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 02:03:48,456 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 02:03:48,456 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:03:48,473 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 02:03:48,473 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 02:04:23,128 [INFO] 127.0.0.1 - - [07/Mar/2026 02:04:23] "[33mGET / HTTP/1.1[0m" 404 -
+2026-03-07 02:04:23,733 [INFO] 127.0.0.1 - - [07/Mar/2026 02:04:23] "[33mGET /apple-touch-icon-precomposed.png HTTP/1.1[0m" 404 -
+2026-03-07 02:04:23,779 [INFO] 127.0.0.1 - - [07/Mar/2026 02:04:23] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-07 02:04:23,792 [INFO] 127.0.0.1 - - [07/Mar/2026 02:04:23] "[33mGET /apple-touch-icon.png HTTP/1.1[0m" 404 -
+2026-03-07 02:04:23,846 [INFO] 127.0.0.1 - - [07/Mar/2026 02:04:23] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-07 02:04:36,858 [INFO] 192.168.0.4 - - [07/Mar/2026 02:04:36] "[33mGET / HTTP/1.1[0m" 404 -
+2026-03-07 02:04:36,926 [INFO] 192.168.0.4 - - [07/Mar/2026 02:04:36] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-07 02:13:21,504 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 02:13:21,504 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 02:13:21,504 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 02:13:21,504 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 02:13:21,504 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:13:21,518 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 02:13:21,518 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 02:13:49,478 [INFO] 127.0.0.1 - - [07/Mar/2026 02:13:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:14:03,019 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:03] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 02:14:03,023 [INFO] [DOMAIN] Scanning: youtube.com
+2026-03-07 02:14:04,494 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:04] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:14:05,490 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:14:05,491 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:05] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 02:14:05,516 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:05] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-07 02:14:05,520 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:05] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 02:14:19,608 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:19] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:14:34,711 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:34] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:14:49,690 [INFO] 127.0.0.1 - - [07/Mar/2026 02:14:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:15:06,464 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:06] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:15:08,506 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:08] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 02:15:08,510 [INFO] [DOMAIN] Scanning: youtube.com
+2026-03-07 02:15:10,555 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:15:10,557 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:10] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 02:15:10,583 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:10] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-07 02:15:10,587 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:10] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 02:15:21,478 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:21] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:15:35,776 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:35] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:15:35,780 [INFO] [FULL SCAN] DWM-09B89064 | domain: google.com
+2026-03-07 02:15:35,780 [INFO] [DOMAIN] Scanning: google.com
+2026-03-07 02:15:36,477 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:36] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:15:37,716 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:15:38,038 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-09B89064.pdf
+2026-03-07 02:15:38,038 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-09B89064.pdf
+2026-03-07 02:15:38,038 [INFO] [FULL SCAN] Complete: DWM-09B89064 | CLEAN
+2026-03-07 02:15:38,038 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:38] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:15:51,148 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:51] "GET /api/report/DWM-09B89064 HTTP/1.1" 200 -
+2026-03-07 02:15:51,470 [INFO] 127.0.0.1 - - [07/Mar/2026 02:15:51] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:16:06,554 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:06] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:16:21,486 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:21] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:16:36,498 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:36] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:16:51,114 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:51] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:16:51,121 [INFO] [FULL SCAN] DWM-8B117942 | domain: https://youtube.com_@watch-ziwzrbcwnukt83.netlify.app/
+2026-03-07 02:16:51,121 [INFO] [DOMAIN] Scanning: https://youtube.com_@watch-ziwzrbcwnukt83.netlify.app/
+2026-03-07 02:16:51,481 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:51] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:16:52,104 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:16:52,132 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-8B117942.pdf
+2026-03-07 02:16:52,132 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-8B117942.pdf
+2026-03-07 02:16:52,132 [INFO] [FULL SCAN] Complete: DWM-8B117942 | CLEAN
+2026-03-07 02:16:52,133 [INFO] 127.0.0.1 - - [07/Mar/2026 02:16:52] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:17:06,468 [INFO] 127.0.0.1 - - [07/Mar/2026 02:17:06] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:19:31,203 [INFO] [DOMAIN] Scanning: your-malicious-link-here
+2026-03-07 02:19:32,178 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:19:32,181 [INFO] 127.0.0.1 - - [07/Mar/2026 02:19:32] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 02:19:32,216 [INFO] 127.0.0.1 - - [07/Mar/2026 02:19:32] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 02:19:48,830 [INFO] [FULL SCAN] DWM-749F2A18 | domain: malware.wicar.org
+2026-03-07 02:19:48,831 [INFO] [DOMAIN] Scanning: malware.wicar.org
+2026-03-07 02:19:51,585 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:19:51,611 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-749F2A18.pdf
+2026-03-07 02:19:51,611 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-749F2A18.pdf
+2026-03-07 02:19:51,611 [INFO] [FULL SCAN] Complete: DWM-749F2A18 | CLEAN
+2026-03-07 02:19:51,612 [INFO] 127.0.0.1 - - [07/Mar/2026 02:19:51] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:22:32,133 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 02:22:32,133 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 02:22:32,133 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 02:22:32,133 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 02:22:32,133 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 02:22:32,151 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 02:22:32,151 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 02:22:49,010 [INFO] 127.0.0.1 - - [07/Mar/2026 02:22:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:22:49,677 [INFO] 127.0.0.1 - - [07/Mar/2026 02:22:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:22:59,539 [INFO] 127.0.0.1 - - [07/Mar/2026 02:22:59] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:22:59,543 [INFO] [FULL SCAN] DWM-CB9DE3E8 | domain: google.com
+2026-03-07 02:22:59,543 [INFO] [DOMAIN] Scanning: google.com
+2026-03-07 02:23:02,810 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:23:02,811 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 02:23:03,722 [INFO] [AI] Done. Tokens: 694
+2026-03-07 02:23:03,828 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-CB9DE3E8.pdf
+2026-03-07 02:23:03,828 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-CB9DE3E8.pdf
+2026-03-07 02:23:03,828 [INFO] [FULL SCAN] Complete: DWM-CB9DE3E8 | CLEAN
+2026-03-07 02:23:03,828 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:03] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:23:04,698 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:04] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:23:19,479 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:19] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:23:19,483 [INFO] [FULL SCAN] DWM-E9A2429F | domain: https://youtube.com_@watch-ziwzrbcwnukt83.netlify.app/
+2026-03-07 02:23:19,483 [INFO] [DOMAIN] Scanning: https://youtube.com_@watch-ziwzrbcwnukt83.netlify.app/
+2026-03-07 02:23:19,692 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:19] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:23:20,928 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 02:23:20,928 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 02:23:21,954 [INFO] [AI] Done. Tokens: 547
+2026-03-07 02:23:21,980 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-E9A2429F.pdf
+2026-03-07 02:23:21,980 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-E9A2429F.pdf
+2026-03-07 02:23:21,980 [INFO] [FULL SCAN] Complete: DWM-E9A2429F | CLEAN
+2026-03-07 02:23:21,980 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:21] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 02:23:34,701 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:34] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 02:23:49,722 [INFO] 127.0.0.1 - - [07/Mar/2026 02:23:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:17:58,082 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 12:17:58,082 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 12:17:58,083 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 12:17:58,083 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 12:17:58,083 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 12:17:58,093 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 12:17:58,093 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 12:18:08,028 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:08] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:18:15,588 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:15] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:18:23,043 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:18:38,043 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:18:51,431 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:51] "OPTIONS /api/scan/ip HTTP/1.1" 200 -
+2026-03-07 12:18:51,434 [INFO] [IP] Scanning: 192.168.0.10
+2026-03-07 12:18:52,714 [INFO] [IP] Done. Threat: CLEAN
+2026-03-07 12:18:52,716 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:52] "POST /api/scan/ip HTTP/1.1" 200 -
+2026-03-07 12:18:52,742 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:52] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-07 12:18:52,746 [INFO] [AI] Analyzing ip with Groq...
+2026-03-07 12:18:53,041 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:53] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:18:53,757 [INFO] [AI] Done. Tokens: 534
+2026-03-07 12:18:53,761 [INFO] 127.0.0.1 - - [07/Mar/2026 12:18:53] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 12:19:08,043 [INFO] 127.0.0.1 - - [07/Mar/2026 12:19:08] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:19:23,066 [INFO] 127.0.0.1 - - [07/Mar/2026 12:19:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:19:38,158 [INFO] 127.0.0.1 - - [07/Mar/2026 12:19:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:20:02,098 [INFO] 127.0.0.1 - - [07/Mar/2026 12:20:02] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:20:40,856 [INFO] 127.0.0.1 - - [07/Mar/2026 12:20:40] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:20:43,374 [INFO] 127.0.0.1 - - [07/Mar/2026 12:20:43] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:20:43,377 [INFO] [FULL SCAN] DWM-9F73B62B | domain: wicar.org
+2026-03-07 12:20:43,377 [INFO] [DOMAIN] Scanning: wicar.org
+2026-03-07 12:20:45,911 [INFO] [DOMAIN] Done. Threat: MEDIUM
+2026-03-07 12:20:45,911 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:20:47,141 [INFO] [AI] Done. Tokens: 754
+2026-03-07 12:20:47,261 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-9F73B62B.pdf
+2026-03-07 12:20:47,261 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-9F73B62B.pdf
+2026-03-07 12:20:47,261 [INFO] [FULL SCAN] Sending Telegram alerts for MEDIUM...
+2026-03-07 12:20:49,809 [INFO] [FULL SCAN] Complete: DWM-9F73B62B | MEDIUM
+2026-03-07 12:20:49,811 [INFO] 127.0.0.1 - - [07/Mar/2026 12:20:49] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:20:55,857 [INFO] 127.0.0.1 - - [07/Mar/2026 12:20:55] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:21:10,858 [INFO] 127.0.0.1 - - [07/Mar/2026 12:21:10] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:21:25,858 [INFO] 127.0.0.1 - - [07/Mar/2026 12:21:25] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:21:40,849 [INFO] 127.0.0.1 - - [07/Mar/2026 12:21:40] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:21:56,019 [INFO] 127.0.0.1 - - [07/Mar/2026 12:21:56] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:22:03,362 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:03] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:22:03,367 [INFO] [FULL SCAN] DWM-A061F820 | domain: http://malware.wicar.org/data/ms03_020_ie_objecttype.html
+2026-03-07 12:22:03,367 [INFO] [DOMAIN] Scanning: http://malware.wicar.org/data/ms03_020_ie_objecttype.html
+2026-03-07 12:22:04,750 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 12:22:04,751 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:22:06,086 [INFO] [AI] Done. Tokens: 613
+2026-03-07 12:22:06,112 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-A061F820.pdf
+2026-03-07 12:22:06,113 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-A061F820.pdf
+2026-03-07 12:22:06,113 [INFO] [FULL SCAN] Complete: DWM-A061F820 | CLEAN
+2026-03-07 12:22:06,113 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:06] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:22:11,004 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:11] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:22:27,050 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:27] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:22:48,762 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:48] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:22:56,178 [INFO] 127.0.0.1 - - [07/Mar/2026 12:22:56] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:22:56,182 [INFO] [FULL SCAN] DWM-C8C7BB1A | domain: br-icloud.com.br
+2026-03-07 12:22:56,182 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-07 12:23:00,360 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-07 12:23:00,360 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:23:01,483 [INFO] [AI] Done. Tokens: 644
+2026-03-07 12:23:01,510 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-C8C7BB1A.pdf
+2026-03-07 12:23:01,510 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-C8C7BB1A.pdf
+2026-03-07 12:23:01,510 [INFO] [FULL SCAN] Sending Telegram alerts for HIGH...
+2026-03-07 12:23:03,743 [INFO] 127.0.0.1 - - [07/Mar/2026 12:23:03] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:23:03,944 [INFO] [FULL SCAN] Complete: DWM-C8C7BB1A | HIGH
+2026-03-07 12:23:03,945 [INFO] 127.0.0.1 - - [07/Mar/2026 12:23:03] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:23:18,850 [INFO] 127.0.0.1 - - [07/Mar/2026 12:23:18] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:23:33,850 [INFO] 127.0.0.1 - - [07/Mar/2026 12:23:33] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:23:49,906 [INFO] 127.0.0.1 - - [07/Mar/2026 12:23:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:24:09,460 [INFO] 127.0.0.1 - - [07/Mar/2026 12:24:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:24:47,608 [INFO] 127.0.0.1 - - [07/Mar/2026 12:24:47] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:25:23,265 [INFO] 127.0.0.1 - - [07/Mar/2026 12:25:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:25:38,105 [INFO] 127.0.0.1 - - [07/Mar/2026 12:25:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:25:54,124 [INFO] 127.0.0.1 - - [07/Mar/2026 12:25:54] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:26:17,600 [INFO] 127.0.0.1 - - [07/Mar/2026 12:26:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:26:45,420 [INFO] 127.0.0.1 - - [07/Mar/2026 12:26:45] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:27:19,728 [INFO] 127.0.0.1 - - [07/Mar/2026 12:27:19] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:27:58,389 [INFO] 127.0.0.1 - - [07/Mar/2026 12:27:58] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:29:59,682 [INFO] 127.0.0.1 - - [07/Mar/2026 12:29:59] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:32:17,156 [INFO] 127.0.0.1 - - [07/Mar/2026 12:32:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:33:42,237 [INFO] 127.0.0.1 - - [07/Mar/2026 12:33:42] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:33:46,505 [INFO] 127.0.0.1 - - [07/Mar/2026 12:33:46] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:33:46,509 [INFO] [FULL SCAN] DWM-9F783D97 | domain: br-icloud.com.br
+2026-03-07 12:33:46,510 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-07 12:33:48,966 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-07 12:33:48,966 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:33:50,092 [INFO] [AI] Done. Tokens: 614
+2026-03-07 12:33:50,119 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-9F783D97.pdf
+2026-03-07 12:33:50,119 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-9F783D97.pdf
+2026-03-07 12:33:50,119 [INFO] [FULL SCAN] Sending Telegram alerts for HIGH...
+2026-03-07 12:33:57,226 [INFO] 127.0.0.1 - - [07/Mar/2026 12:33:57] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:34:07,531 [INFO] [FULL SCAN] Complete: DWM-9F783D97 | HIGH
+2026-03-07 12:34:07,533 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:07] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:34:12,227 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:12] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:34:27,327 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:27] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:34:39,142 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 12:34:39,142 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 12:34:39,142 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 12:34:39,142 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 12:34:39,142 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 12:34:39,152 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 12:34:39,152 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 12:34:45,375 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:45] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:34:57,599 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:57] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 12:34:57,602 [INFO] [DOMAIN] Scanning: http://www.garage-pirenne.be/index.php?option=com_content&view=article&id=70&vsig70_0=15
+2026-03-07 12:34:59,106 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 12:34:59,108 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:59] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 12:34:59,135 [INFO] 127.0.0.1 - - [07/Mar/2026 12:34:59] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-07 12:34:59,146 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:35:00,232 [INFO] [AI] Done. Tokens: 569
+2026-03-07 12:35:00,236 [INFO] 127.0.0.1 - - [07/Mar/2026 12:35:00] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 12:35:00,385 [INFO] 127.0.0.1 - - [07/Mar/2026 12:35:00] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:35:15,394 [INFO] 127.0.0.1 - - [07/Mar/2026 12:35:15] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:35:30,499 [INFO] 127.0.0.1 - - [07/Mar/2026 12:35:30] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:35:45,551 [INFO] 127.0.0.1 - - [07/Mar/2026 12:35:45] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:36:00,634 [INFO] 127.0.0.1 - - [07/Mar/2026 12:36:00] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:36:15,734 [INFO] 127.0.0.1 - - [07/Mar/2026 12:36:15] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:36:21,893 [INFO] [FULL SCAN] DWM-03E560A5 | domain: br-icloud.com.br
+2026-03-07 12:36:21,895 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-07 12:36:24,512 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-07 12:36:24,513 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:36:25,482 [INFO] [AI] Done. Tokens: 606
+2026-03-07 12:36:25,586 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-03E560A5.pdf
+2026-03-07 12:36:25,586 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-03E560A5.pdf
+2026-03-07 12:36:25,586 [INFO] [FULL SCAN] Sending Telegram alerts for HIGH...
+2026-03-07 12:36:27,258 [INFO] [TELEGRAM] PDF sent: DWM-03E560A5
+2026-03-07 12:36:27,261 [INFO] [FULL SCAN] Complete: DWM-03E560A5 | HIGH
+2026-03-07 12:36:27,262 [INFO] 127.0.0.1 - - [07/Mar/2026 12:36:27] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:36:33,298 [INFO] 127.0.0.1 - - [07/Mar/2026 12:36:33] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:36:54,424 [INFO] 127.0.0.1 - - [07/Mar/2026 12:36:54] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:37:09,540 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:37:24,530 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:24] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:37:25,662 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:25] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:37:25,666 [INFO] [FULL SCAN] DWM-943EB7FF | domain: signin.eby.de.zukruygxctzmmqi.civpro.co.za
+2026-03-07 12:37:25,666 [INFO] [DOMAIN] Scanning: signin.eby.de.zukruygxctzmmqi.civpro.co.za
+2026-03-07 12:37:27,838 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-07 12:37:27,839 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 12:37:28,720 [INFO] [AI] Done. Tokens: 607
+2026-03-07 12:37:28,748 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-943EB7FF.pdf
+2026-03-07 12:37:28,748 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-943EB7FF.pdf
+2026-03-07 12:37:28,748 [INFO] [FULL SCAN] Sending Telegram alerts for HIGH...
+2026-03-07 12:37:31,371 [INFO] [TELEGRAM] PDF sent: DWM-943EB7FF
+2026-03-07 12:37:31,373 [INFO] [FULL SCAN] Complete: DWM-943EB7FF | HIGH
+2026-03-07 12:37:31,374 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:31] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 12:37:39,520 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:39] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:37:54,622 [INFO] 127.0.0.1 - - [07/Mar/2026 12:37:54] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:38:09,656 [INFO] 127.0.0.1 - - [07/Mar/2026 12:38:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:38:24,760 [INFO] 127.0.0.1 - - [07/Mar/2026 12:38:24] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:39:04,599 [INFO] 127.0.0.1 - - [07/Mar/2026 12:39:04] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:39:36,144 [INFO] 127.0.0.1 - - [07/Mar/2026 12:39:36] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 12:40:46,010 [INFO] 127.0.0.1 - - [07/Mar/2026 12:40:46] "GET /api/health HTTP/1.1" 200 -
