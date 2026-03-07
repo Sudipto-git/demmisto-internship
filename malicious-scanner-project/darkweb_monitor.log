@@ -287,3 +287,52 @@
 2026-03-07 12:39:04,599 [INFO] 127.0.0.1 - - [07/Mar/2026 12:39:04] "GET /api/health HTTP/1.1" 200 -
 2026-03-07 12:39:36,144 [INFO] 127.0.0.1 - - [07/Mar/2026 12:39:36] "GET /api/health HTTP/1.1" 200 -
 2026-03-07 12:40:46,010 [INFO] 127.0.0.1 - - [07/Mar/2026 12:40:46] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:15:59,353 [INFO] ╔══════════════════════════════════════════╗
+2026-03-07 17:15:59,354 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-07 17:15:59,354 [INFO] ╚══════════════════════════════════════════╝
+2026-03-07 17:15:59,354 [INFO] 📡  http://0.0.0.0:5001
+2026-03-07 17:15:59,354 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-07 17:15:59,367 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-07 17:15:59,367 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-07 17:16:09,082 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:16:09,183 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:16:24,201 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:24] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:16:52,631 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:16:56,116 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:56] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 17:16:56,119 [INFO] [DOMAIN] Scanning: signin.eby.de.zukruygxctzmmqi.civpro.co.za
+2026-03-07 17:16:57,946 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-07 17:16:57,948 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:57] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-07 17:16:57,978 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:57] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-07 17:16:57,982 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 17:16:59,065 [INFO] [AI] Done. Tokens: 631
+2026-03-07 17:16:59,069 [INFO] 127.0.0.1 - - [07/Mar/2026 17:16:59] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-07 17:17:07,633 [INFO] 127.0.0.1 - - [07/Mar/2026 17:17:07] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:17:22,640 [INFO] 127.0.0.1 - - [07/Mar/2026 17:17:22] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:17:37,636 [INFO] 127.0.0.1 - - [07/Mar/2026 17:17:37] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:17:52,637 [INFO] 127.0.0.1 - - [07/Mar/2026 17:17:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:18:07,754 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:07] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:18:22,738 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:22] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:18:29,815 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:29] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-07 17:18:29,819 [INFO] [FULL SCAN] DWM-EB8806D9 | domain: 192.com/atoz/people/oakley/patrick/
+2026-03-07 17:18:29,819 [INFO] [DOMAIN] Scanning: 192.com/atoz/people/oakley/patrick/
+2026-03-07 17:18:31,328 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-07 17:18:31,328 [INFO] [AI] Analyzing domain with Groq...
+2026-03-07 17:18:32,451 [INFO] [AI] Done. Tokens: 559
+2026-03-07 17:18:32,774 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-EB8806D9.pdf
+2026-03-07 17:18:32,774 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-EB8806D9.pdf
+2026-03-07 17:18:32,774 [INFO] [FULL SCAN] Complete: DWM-EB8806D9 | CLEAN
+2026-03-07 17:18:32,775 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:32] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-07 17:18:37,733 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:37] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:18:52,732 [INFO] 127.0.0.1 - - [07/Mar/2026 17:18:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:19:07,740 [INFO] 127.0.0.1 - - [07/Mar/2026 17:19:07] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:19:22,738 [INFO] 127.0.0.1 - - [07/Mar/2026 17:19:22] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:19:37,740 [INFO] 127.0.0.1 - - [07/Mar/2026 17:19:37] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:19:52,741 [INFO] 127.0.0.1 - - [07/Mar/2026 17:19:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:20:07,740 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:07] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:20:22,743 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:22] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:20:37,745 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:37] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:20:52,744 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:21:07,743 [INFO] 127.0.0.1 - - [07/Mar/2026 17:21:07] "GET /api/health HTTP/1.1" 200 -
