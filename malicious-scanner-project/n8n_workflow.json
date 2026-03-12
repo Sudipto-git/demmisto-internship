@@ -1,5 +1,5 @@
 {
-  "name": "DARKWEB MONITOR — Webhook Scanner",
+  "name": "DARKWEB MONITOR \u2014 Full Pipeline",
   "nodes": [
     {
       "parameters": {
@@ -8,22 +8,64 @@
         "responseMode": "responseNode",
         "options": {}
       },
-      "id": "node-webhook",
-      "name": "🔴 Webhook Trigger",
+      "id": "webhook-node",
+      "name": "\ud83d\udd34 Webhook Trigger",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [200, 300],
+      "position": [
+        180,
+        300
+      ],
       "webhookId": "darkweb-monitor-scan"
     },
     {
       "parameters": {
-        "jsCode": "// ── Validate and extract input ──────────────────────\nconst body = $input.first().json.body || $input.first().json;\n\nconst target = (body.target || body.url || body.domain || body.ip || '').trim();\nconst type   = (body.type || '').trim().toLowerCase();\n\nif (!target) {\n  throw new Error('Missing field: target (url/domain/ip)');\n}\n\n// Auto-detect type if not provided\nlet scanType = type;\nif (!scanType) {\n  if (/^\\d{1,3}(\\.\\d{1,3}){3}$/.test(target)) {\n    scanType = 'ip';\n  } else {\n    scanType = 'domain';\n  }\n}\n\n// Clean domain — strip http/https/www/paths\nlet cleanTarget = target;\nif (scanType === 'domain') {\n  cleanTarget = target\n    .replace(/^https?:\\/\\//i, '')\n    .replace(/^www\\./i, '')\n    .split('/')[0]\n    .split('?')[0]\n    .trim();\n}\n\nreturn [{\n  json: {\n    target:       cleanTarget,\n    original:     target,\n    type:         scanType,\n    triggered_at: new Date().toISOString(),\n    api_base:     'YOUR_API_BASE_URL',\n    api_secret:   'darkweb_secret_2024'\n  }\n}];"
+        "jsCode": "// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n//  DARKWEB MONITOR \u2014 Network Config\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n//\n//  LOCAL  (same WiFi): Flask at 192.168.0.4:5001\n//  REMOTE (Tailscale): Flask at 100.106.176.128:5001\n//\n//  n8n URLs:\n//  LOCAL  \u2192 http://192.168.0.10:5678/webhook/darkweb-scan\n//  REMOTE \u2192 http://100.91.244.44:5678/webhook/darkweb-scan\n// \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n\nconst API_SECRET = 'darkweb_secret_2024';\n\n// \u2500\u2500 Both API endpoints \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n// n8n will try local first, fallback to Tailscale\nconst API_LOCAL    = 'http://192.168.0.4:5001';       // Mac local IP\nconst API_TAILSCALE = 'http://100.106.176.128:5001';  // Mac Tailscale IP\n\n// \u2500\u2500 Extract input \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nconst body = $input.first().json.body || $input.first().json;\nlet target = (body.target || body.url || body.domain || body.ip || '').trim();\nconst type = (body.type || '').trim().toLowerCase();\n\nif (!target) throw new Error('\u274c Missing field: target (domain / ip / url)');\n\n// \u2500\u2500 Auto detect type \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nlet scanType = type;\nif (!scanType) {\n  scanType = /^\\d{1,3}(\\.\\d{1,3}){3}$/.test(target) ? 'ip' : 'domain';\n}\n\n// \u2500\u2500 Clean URL \u2192 bare domain \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nif (scanType === 'domain') {\n  target = target\n    .replace(/^https?:\\/\\//i, '')\n    .replace(/^www\\./i, '')\n    .split('/')[0].split('?')[0].trim();\n}\n\nreturn [{\n  json: {\n    target,\n    original:      body.target || target,\n    type:          scanType,\n    triggered_at:  new Date().toISOString(),\n    api_local:     API_LOCAL,\n    api_tailscale: API_TAILSCALE,\n    api_secret:    API_SECRET\n  }\n}];"
       },
-      "id": "node-validate",
-      "name": "✅ Validate Input",
+      "id": "validate-node",
+      "name": "\u2705 Validate Input",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [440, 300]
+      "position": [
+        400,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "={{ $json.api_local }}/api/health",
+        "options": {
+          "timeout": 4000,
+          "response": {
+            "response": {
+              "fullResponse": true,
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "health-local-node",
+      "name": "\ud83c\udfe5 Try Local API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        640,
+        180
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// \u2500\u2500 Pick working API endpoint \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\nconst validate = $('\u2705 Validate Input').item.json;\nconst healthResult = $input.first().json;\n\n// Check if local API responded with status 200\nconst localOk = healthResult?.statusCode === 200 || healthResult?.status === 'online';\n\nconst api_base = localOk ? validate.api_local : validate.api_tailscale;\n\nconsole.log(`[NETWORK] Local OK: ${localOk} \u2192 Using: ${api_base}`);\n\nreturn [{\n  json: {\n    target:      validate.target,\n    type:        validate.type,\n    api_base,\n    api_secret:  validate.api_secret,\n    network:     localOk ? 'local' : 'tailscale',\n    triggered_at: validate.triggered_at\n  }\n}];"
+      },
+      "id": "pick-api-node",
+      "name": "\ud83c\udf10 Pick Network",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        860,
+        300
+      ]
     },
     {
       "parameters": {
@@ -32,56 +74,127 @@
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
-            { "name": "Content-Type", "value": "application/json" },
-            { "name": "X-API-Secret", "value": "={{ $json.api_secret }}" }
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-API-Secret",
+              "value": "={{ $json.api_secret }}"
+            }
           ]
         },
         "sendBody": true,
         "specifyBody": "json",
         "jsonBody": "={\n  \"target\": \"{{ $json.target }}\",\n  \"type\":   \"{{ $json.type }}\"\n}",
-        "options": { "timeout": 120000 }
+        "options": {
+          "timeout": 120000
+        }
       },
-      "id": "node-fullscan",
-      "name": "🔍 Full Scan",
+      "id": "fullscan-node",
+      "name": "\ud83d\udd0d Full Scan",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4,
-      "position": [680, 300]
+      "position": [
+        1080,
+        300
+      ]
     },
     {
       "parameters": {
-        "jsCode": "const scan = $input.first().json;\n\nconst threatLevel = scan.threat_level || 'UNKNOWN';\nconst aiAnalysis  = scan.ai_analysis  || 'No analysis';\nconst scanId      = scan.scan_id      || 'N/A';\n\nconst summaryLine = aiAnalysis\n  .split('\\n')\n  .map(l => l.replace(/\\*\\*/g, '').trim())\n  .find(l => l.length > 20 && !l.includes('THREAT SUMMARY'))\n  || aiAnalysis.slice(0, 200);\n\nreturn [{\n  json: {\n    status:       'complete',\n    scan_id:      scanId,\n    target:       scan.target       || 'N/A',\n    target_type:  scan.target_type  || 'N/A',\n    threat_level: threatLevel,\n    summary:      summaryLine,\n    ai_analysis:  aiAnalysis,\n    alerts_sent:  scan.alerts_sent  || {},\n    pdf_url:      scan.pdf_url      || null,\n    completed_at: scan.completed_at || new Date().toISOString()\n  }\n}];"
+        "jsCode": "const scan    = $input.first().json;\nconst network = $('\ud83c\udf10 Pick Network').item.json.network || 'unknown';\n\nconst threatLevel = scan.threat_level || 'UNKNOWN';\nconst aiAnalysis  = scan.ai_analysis  || 'No analysis available';\nconst alerts      = scan.alerts_sent  || {};\n\nconst emoji = {\n  CRITICAL: '\ud83d\udd34', HIGH: '\ud83d\udfe0',\n  MEDIUM:   '\ud83d\udfe1', LOW:  '\ud83d\udfe2', CLEAN: '\u2705'\n}[threatLevel] || '\u26aa';\n\nconst summary = aiAnalysis\n  .split('\\n')\n  .map(l => l.replace(/\\*\\*/g, '').trim())\n  .find(l => l.length > 20 && !l.toUpperCase().includes('THREAT SUMMARY'))\n  || aiAnalysis.slice(0, 250);\n\n// Alert statuses\nconst tgSent         = alerts.telegram?.status === 'sent';\nconst tgScreenshot   = alerts.telegram_screenshot?.status === 'sent';\nconst tgPdf          = alerts.telegram_pdf?.status === 'sent';\n\nreturn [{\n  json: {\n    status:             'complete',\n    scan_id:            scan.scan_id      || 'N/A',\n    target:             scan.target       || 'N/A',\n    target_type:        scan.target_type  || 'N/A',\n    threat_level:       threatLevel,\n    threat_emoji:       emoji,\n    summary,\n    tg_sent:            tgSent,\n    tg_screenshot_sent: tgScreenshot,\n    tg_pdf_sent:        tgPdf,\n    pdf_url:            scan.pdf_url      || null,\n    tokens_used:        scan.tokens_used  || 0,\n    network_used:       network,\n    completed_at:       scan.completed_at || new Date().toISOString()\n  }\n}];"
       },
-      "id": "node-process",
-      "name": "📋 Process Result",
+      "id": "process-node",
+      "name": "\ud83d\udccb Process Result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [920, 300]
+      "position": [
+        1300,
+        300
+      ]
     },
     {
       "parameters": {
         "respondWith": "json",
-        "responseBody": "={\n  \"status\":       \"complete\",\n  \"scan_id\":      \"{{ $json.scan_id }}\",\n  \"target\":       \"{{ $json.target }}\",\n  \"threat_level\": \"{{ $json.threat_level }}\",\n  \"summary\":      {{ JSON.stringify($json.summary) }},\n  \"alerts_sent\":  {{ JSON.stringify($json.alerts_sent) }},\n  \"pdf_url\":      {{ JSON.stringify($json.pdf_url) }},\n  \"completed_at\": \"{{ $json.completed_at }}\"\n}",
+        "responseBody": "={\n  \"status\":               \"{{ $json.status }}\",\n  \"scan_id\":              \"{{ $json.scan_id }}\",\n  \"target\":               \"{{ $json.target }}\",\n  \"target_type\":          \"{{ $json.target_type }}\",\n  \"threat_level\":         \"{{ $json.threat_level }}\",\n  \"threat_emoji\":         \"{{ $json.threat_emoji }}\",\n  \"summary\":              {{ JSON.stringify($json.summary) }},\n  \"tg_sent\":              {{ $json.tg_sent }},\n  \"tg_screenshot_sent\":   {{ $json.tg_screenshot_sent }},\n  \"tg_pdf_sent\":          {{ $json.tg_pdf_sent }},\n  \"pdf_url\":              {{ JSON.stringify($json.pdf_url) }},\n  \"network_used\":         \"{{ $json.network_used }}\",\n  \"tokens_used\":          {{ $json.tokens_used }},\n  \"completed_at\":         \"{{ $json.completed_at }}\"\n}",
         "options": {}
       },
-      "id": "node-respond",
-      "name": "✅ Respond",
+      "id": "respond-node",
+      "name": "\u2705 Respond",
       "type": "n8n-nodes-base.respondToWebhook",
       "typeVersion": 1,
-      "position": [1160, 300]
+      "position": [
+        1520,
+        300
+      ]
     }
   ],
   "connections": {
-    "🔴 Webhook Trigger": {
-      "main": [[{ "node": "✅ Validate Input",  "type": "main", "index": 0 }]]
+    "\ud83d\udd34 Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "\u2705 Validate Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "✅ Validate Input": {
-      "main": [[{ "node": "🔍 Full Scan",        "type": "main", "index": 0 }]]
+    "\u2705 Validate Input": {
+      "main": [
+        [
+          {
+            "node": "\ud83c\udfe5 Try Local API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "🔍 Full Scan": {
-      "main": [[{ "node": "📋 Process Result",   "type": "main", "index": 0 }]]
+    "\ud83c\udfe5 Try Local API": {
+      "main": [
+        [
+          {
+            "node": "\ud83c\udf10 Pick Network",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "📋 Process Result": {
-      "main": [[{ "node": "✅ Respond",           "type": "main", "index": 0 }]]
+    "\ud83c\udf10 Pick Network": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udd0d Full Scan",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udd0d Full Scan": {
+      "main": [
+        [
+          {
+            "node": "\ud83d\udccb Process Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "\ud83d\udccb Process Result": {
+      "main": [
+        [
+          {
+            "node": "\u2705 Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {

@@ -21,27 +21,21 @@ import os
 # ── Ensure current directory is in path ───────────────
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-import json
 import uuid
 import logging
 from datetime import datetime
 
 from flask      import Flask, request, jsonify, send_file
 from flask_cors import CORS
-from config import (
-    API_SECRET,
-    FLASK_HOST,
-    FLASK_PORT,
-    FLASK_DEBUG,
-    ALERT_ON_LEVELS,
-    REPORTS_DIR,
-)
+
+from config         import API_SECRET, FLASK_HOST, FLASK_PORT, FLASK_DEBUG, ALERT_ON_LEVELS, REPORTS_DIR
 from domain_osint   import scan_domain
 from ip_scanner     import scan_ip
 from paste_monitor  import monitor_pastes
 from ai_analyst     import analyze
-from telegram_alert import send_telegram_alert, send_telegram_pdf
+from telegram_alert import send_telegram_alert, send_telegram_pdf, send_telegram_screenshot
 from pdf_report     import generate_pdf
+from screenshot     import take_screenshot
 
 # ── Logging ────────────────────────────────────────────
 logging.basicConfig(
@@ -72,7 +66,7 @@ def health():
         "status":    "online",
         "service":   "DARKWEB MONITOR v2.0",
         "timestamp": datetime.utcnow().isoformat(),
-        "modules":   ["domain_osint", "ip_scanner", "paste_monitor", "ai_analyst"],
+        "modules":   ["domain_osint", "ip_scanner", "paste_monitor", "ai_analyst", "screenshot"],
         "alerts":    ["telegram"],
         "reports":   ["pdf"]
     }), 200
@@ -135,7 +129,7 @@ def api_analyze():
 
 
 # ══════════════════════════════════════════════════════
-#  FULL SCAN — scan + AI + PDF + Telegram alert
+#  FULL SCAN — scan + screenshot + AI + PDF + Telegram
 # ══════════════════════════════════════════════════════
 @app.route("/api/scan/full", methods=["POST"])
 def api_full_scan():
@@ -174,6 +168,16 @@ def api_full_scan():
         scan_result.get("virustotal", {}).get("threat_level", "UNKNOWN")
     )
 
+    # Use AI verdict as fallback if VT failed
+    if threat_level in ["CLEAN", "UNKNOWN"]:
+        ai_text = ai_result.get("ai_analysis", "").upper()
+        if "CRITICAL" in ai_text:
+            threat_level = "CRITICAL"
+        elif "HIGH" in ai_text:
+            threat_level = "HIGH"
+        elif "MEDIUM" in ai_text:
+            threat_level = "MEDIUM"
+
     report = {
         "scan_id":      scan_id,
         "target":       target,
@@ -186,7 +190,21 @@ def api_full_scan():
         "completed_at": datetime.utcnow().isoformat()
     }
 
-    # ── Step 4: Generate PDF ──────────────────────────
+    # ── Step 4: Screenshot ────────────────────────────
+    screenshot_path = ""
+    if target_type in ["domain", "ip"]:
+        try:
+            log.info(f"[FULL SCAN] Taking screenshot of {target}...")
+            screenshot_path = take_screenshot(target, scan_id)
+            if screenshot_path:
+                report["screenshot_path"] = screenshot_path
+                log.info(f"[FULL SCAN] Screenshot saved: {screenshot_path}")
+            else:
+                log.warning("[FULL SCAN] Screenshot returned empty path")
+        except Exception as e:
+            log.warning(f"[FULL SCAN] Screenshot failed: {e}")
+
+    # ── Step 5: Generate PDF ──────────────────────────
     pdf_path = ""
     try:
         pdf_path = generate_pdf(report)
@@ -196,13 +214,27 @@ def api_full_scan():
         log.warning(f"[FULL SCAN] PDF failed: {e}")
         report["pdf_error"] = str(e)
 
-    # ── Step 5: Telegram alert ────────────────────────
+    # ── Step 6: Telegram alerts ───────────────────────
     alerts_sent = {}
     if threat_level in ALERT_ON_LEVELS:
         log.info(f"[FULL SCAN] Sending Telegram alerts for {threat_level}...")
-        alerts_sent["telegram"]     = send_telegram_alert(report)
+
+        # 1. Text alert
+        alerts_sent["telegram"] = send_telegram_alert(report)
+
+        # 2. Screenshot (sent before PDF so user sees site first)
+        if screenshot_path:
+            alerts_sent["telegram_screenshot"] = send_telegram_screenshot(
+                screenshot_path, scan_id, target, threat_level
+            )
+        else:
+            alerts_sent["telegram_screenshot"] = {"status": "skipped", "reason": "No screenshot"}
+
+        # 3. PDF report
         alerts_sent["telegram_pdf"] = send_telegram_pdf(pdf_path, scan_id, threat_level)
+
         report["alerts_sent"] = alerts_sent
+        log.info(f"[FULL SCAN] Alerts: {alerts_sent}")
     else:
         report["alerts_sent"] = {"reason": f"No alert — threat is {threat_level}"}
 
@@ -230,5 +262,5 @@ if __name__ == "__main__":
     log.info("║   DARKWEB MONITOR v2.0 — Starting...    ║")
     log.info("╚══════════════════════════════════════════╝")
     log.info(f"📡  http://{FLASK_HOST}:{FLASK_PORT}")
-    log.info(f"📁  Reports: {REPORTS_DIR}")
+    log.info(f"📁  Reports : {REPORTS_DIR}")
     app.run(host=FLASK_HOST, port=FLASK_PORT, debug=FLASK_DEBUG)
