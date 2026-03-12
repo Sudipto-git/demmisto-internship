@@ -336,3 +336,62 @@
 2026-03-07 17:20:37,745 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:37] "GET /api/health HTTP/1.1" 200 -
 2026-03-07 17:20:52,744 [INFO] 127.0.0.1 - - [07/Mar/2026 17:20:52] "GET /api/health HTTP/1.1" 200 -
 2026-03-07 17:21:07,743 [INFO] 127.0.0.1 - - [07/Mar/2026 17:21:07] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:21:27,444 [INFO] 127.0.0.1 - - [07/Mar/2026 17:21:27] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:21:42,452 [INFO] 127.0.0.1 - - [07/Mar/2026 17:21:42] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:21:57,541 [INFO] 127.0.0.1 - - [07/Mar/2026 17:21:57] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:23:03,164 [INFO] 127.0.0.1 - - [07/Mar/2026 17:23:03] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:23:18,177 [INFO] 127.0.0.1 - - [07/Mar/2026 17:23:18] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:23:33,177 [INFO] 127.0.0.1 - - [07/Mar/2026 17:23:33] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:23:48,293 [INFO] 127.0.0.1 - - [07/Mar/2026 17:23:48] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:24:16,363 [INFO] 127.0.0.1 - - [07/Mar/2026 17:24:16] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:24:31,366 [INFO] 127.0.0.1 - - [07/Mar/2026 17:24:31] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:24:46,369 [INFO] 127.0.0.1 - - [07/Mar/2026 17:24:46] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:25:01,476 [INFO] 127.0.0.1 - - [07/Mar/2026 17:25:01] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:25:19,304 [INFO] 127.0.0.1 - - [07/Mar/2026 17:25:19] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:25:34,324 [INFO] 127.0.0.1 - - [07/Mar/2026 17:25:34] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:26:06,227 [INFO] 127.0.0.1 - - [07/Mar/2026 17:26:06] "GET /api/health HTTP/1.1" 200 -
+2026-03-07 17:40:56,629 [INFO] 127.0.0.1 - - [07/Mar/2026 17:40:56] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:12:03,510 [INFO] ╔══════════════════════════════════════════╗
+2026-03-12 14:12:03,510 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-12 14:12:03,510 [INFO] ╚══════════════════════════════════════════╝
+2026-03-12 14:12:03,510 [INFO] 📡  http://0.0.0.0:5001
+2026-03-12 14:12:03,510 [INFO] 📁  Reports: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-12 14:12:03,535 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-12 14:12:03,535 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-12 14:12:12,836 [INFO] 127.0.0.1 - - [12/Mar/2026 14:12:12] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:12:28,892 [INFO] 127.0.0.1 - - [12/Mar/2026 14:12:28] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:13:46,381 [INFO] 127.0.0.1 - - [12/Mar/2026 14:13:46] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:13:50,279 [INFO] 127.0.0.1 - - [12/Mar/2026 14:13:50] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:13:50,282 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-12 14:13:54,013 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-12 14:13:54,015 [INFO] 127.0.0.1 - - [12/Mar/2026 14:13:54] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:13:54,051 [INFO] 127.0.0.1 - - [12/Mar/2026 14:13:54] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:13:54,054 [INFO] [AI] Analyzing domain with Groq...
+2026-03-12 14:13:55,340 [INFO] [AI] Done. Tokens: 627
+2026-03-12 14:13:55,345 [INFO] 127.0.0.1 - - [12/Mar/2026 14:13:55] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:14:01,363 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:01] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:14:16,440 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:16] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:14:31,427 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:31] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:14:32,681 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:32] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:14:32,684 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-12 14:14:35,026 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-12 14:14:35,027 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:35] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:14:35,067 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:35] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:14:35,070 [INFO] [AI] Analyzing domain with Groq...
+2026-03-12 14:14:36,234 [INFO] [AI] Done. Tokens: 662
+2026-03-12 14:14:36,240 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:36] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:14:46,417 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:46] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:14:56,813 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:56] "OPTIONS /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:14:56,816 [INFO] [DOMAIN] Scanning: http://adventure-nicaragua.net/index.php?option=com_mailto&tmpl=component&link=aHR0cDovL2FkdmVudHVyZ.
+2026-03-12 14:14:58,725 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-12 14:14:58,726 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:58] "POST /api/scan/domain HTTP/1.1" 200 -
+2026-03-12 14:14:58,750 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:58] "OPTIONS /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:14:58,753 [INFO] [AI] Analyzing domain with Groq...
+2026-03-12 14:14:59,834 [INFO] [AI] Done. Tokens: 575
+2026-03-12 14:14:59,839 [INFO] 127.0.0.1 - - [12/Mar/2026 14:14:59] "POST /api/analyze HTTP/1.1" 200 -
+2026-03-12 14:15:01,424 [INFO] 127.0.0.1 - - [12/Mar/2026 14:15:01] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:15:58,615 [INFO] 127.0.0.1 - - [12/Mar/2026 14:15:58] "GET /api/health HTTP/1.1" 200 -
+2026-03-12 14:16:13,651 [INFO] 127.0.0.1 - - [12/Mar/2026 14:16:13] "GET /api/health HTTP/1.1" 200 -
