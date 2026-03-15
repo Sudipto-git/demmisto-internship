@@ -1,0 +1,55 @@
+2026-03-16 01:26:02,409 [INFO] ╔══════════════════════════════════════════╗
+2026-03-16 01:26:02,409 [INFO] ║   DARKWEB MONITOR v2.0 — Starting...    ║
+2026-03-16 01:26:02,409 [INFO] ╚══════════════════════════════════════════╝
+2026-03-16 01:26:02,409 [INFO] 📡  http://0.0.0.0:5001
+2026-03-16 01:26:02,409 [INFO] 📁  Reports : /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output
+2026-03-16 01:26:02,453 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+ * Running on http://192.168.0.4:5001
+2026-03-16 01:26:02,453 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-16 01:26:40,560 [INFO] 127.0.0.1 - - [16/Mar/2026 01:26:40] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:26:55,678 [INFO] 127.0.0.1 - - [16/Mar/2026 01:26:55] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:27:30,821 [INFO] 127.0.0.1 - - [16/Mar/2026 01:27:30] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:30:09,824 [INFO] 127.0.0.1 - - [16/Mar/2026 01:30:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:30:24,816 [INFO] 127.0.0.1 - - [16/Mar/2026 01:30:24] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:31:34,065 [INFO] 127.0.0.1 - - [16/Mar/2026 01:31:34] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:31:49,054 [INFO] 127.0.0.1 - - [16/Mar/2026 01:31:49] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:32:04,148 [INFO] 127.0.0.1 - - [16/Mar/2026 01:32:04] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:34:38,376 [INFO] 127.0.0.1 - - [16/Mar/2026 01:34:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:34:53,458 [INFO] 127.0.0.1 - - [16/Mar/2026 01:34:53] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:35:00,566 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:00] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-16 01:35:00,571 [INFO] [FULL SCAN] DWM-62D5F388 | domain: br-icloud.com.br
+2026-03-16 01:35:00,571 [INFO] [DOMAIN] Scanning: br-icloud.com.br
+2026-03-16 01:35:05,097 [INFO] [DOMAIN] Done. Threat: HIGH
+2026-03-16 01:35:05,097 [INFO] [AI] Analyzing domain with Groq...
+2026-03-16 01:35:06,087 [INFO] [AI] Done. Tokens: 652
+2026-03-16 01:35:06,091 [INFO] [FULL SCAN] Taking screenshot of br-icloud.com.br...
+2026-03-16 01:35:06,211 [INFO] [SCREENSHOT] Taking screenshot of: https://br-icloud.com.br
+2026-03-16 01:35:08,423 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:08] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:35:12,599 [ERROR] [SCREENSHOT] ❌ Failed: Page.screenshot: Protocol error (Page.captureScreenshot): Unable to capture screenshot
+Call log:
+  - taking page screenshot
+  - waiting for fonts to load...
+  - fonts loaded
+
+2026-03-16 01:35:12,599 [WARNING] [FULL SCAN] Screenshot returned empty path
+2026-03-16 01:35:12,889 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-62D5F388.pdf
+2026-03-16 01:35:12,889 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-62D5F388.pdf
+2026-03-16 01:35:12,889 [INFO] [FULL SCAN] Sending Telegram alerts for HIGH...
+2026-03-16 01:35:14,080 [INFO] [TELEGRAM] ✅ Alert sent. ID: 30
+2026-03-16 01:35:15,230 [INFO] [TELEGRAM] ✅ PDF sent: DWM-62D5F388
+2026-03-16 01:35:15,231 [INFO] [FULL SCAN] Alerts: {'telegram': {'status': 'sent', 'message_id': 30}, 'telegram_screenshot': {'status': 'skipped', 'reason': 'No screenshot'}, 'telegram_pdf': {'status': 'sent'}}
+2026-03-16 01:35:15,231 [INFO] [FULL SCAN] Complete: DWM-62D5F388 | HIGH
+2026-03-16 01:35:15,232 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:15] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-16 01:35:23,429 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:35:38,427 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:35:53,432 [INFO] 127.0.0.1 - - [16/Mar/2026 01:35:53] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:36:08,431 [INFO] 127.0.0.1 - - [16/Mar/2026 01:36:08] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:36:23,431 [INFO] 127.0.0.1 - - [16/Mar/2026 01:36:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:36:38,430 [INFO] 127.0.0.1 - - [16/Mar/2026 01:36:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:36:53,432 [INFO] 127.0.0.1 - - [16/Mar/2026 01:36:53] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:37:08,431 [INFO] 127.0.0.1 - - [16/Mar/2026 01:37:08] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:37:23,550 [INFO] 127.0.0.1 - - [16/Mar/2026 01:37:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:55:17,715 [INFO] 127.0.0.1 - - [16/Mar/2026 01:55:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 01:55:32,797 [INFO] 127.0.0.1 - - [16/Mar/2026 01:55:32] "GET /api/health HTTP/1.1" 200 -
