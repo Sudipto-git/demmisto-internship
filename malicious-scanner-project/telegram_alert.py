@@ -173,16 +173,14 @@ def send_telegram_screenshot(
     url = target if target.startswith("http") else f"https://{target}"
 
     screenshot_apis = [
-        # 1. linkdr.com — completely free, no key, no signup
-        (f"https://linkdr.com/api/screenshot/{domain}", "linkdr"),
-        # 2. thum.io — free tier
+        # 1. thum.io — reliable, free, no key
         (f"https://image.thum.io/get/width/1280/crop/800/{url}", "thum.io"),
-        # 3. s-shot.ru — free, no key
+        # 2. s-shot.ru — free, no key
         (f"https://mini.s-shot.ru/1280x800/PNG/1024/Z100/?{url}", "s-shot"),
-        # 4. webscreenshot via allorigins proxy
+        # 3. screenshotapi via free proxy
         (
-            f"https://api.allorigins.win/raw?url=https://image.thum.io/get/width/1280/{url}",
-            "allorigins",
+            f"https://shot.screenshotapi.net/screenshot?url={url}&width=1280&height=800&output=image&file_type=png&wait_for_event=load",
+            "screenshotapi",
         ),
     ]
 
@@ -191,16 +189,21 @@ def send_telegram_screenshot(
             log.info(f"[TELEGRAM] Trying {api_name}...")
             resp = requests.get(
                 api_url,
-                timeout=25,
+                timeout=30,
                 allow_redirects=True,
                 headers={
                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
                 },
             )
             content_type = resp.headers.get("content-type", "")
-            is_image = "image" in content_type or len(resp.content) > 10000
+            # Must be real image — check content type AND size AND not a placeholder
+            is_real_image = (
+                "image/png" in content_type or "image/jpeg" in content_type
+            ) and len(
+                resp.content
+            ) > 50000  # real screenshots are >50KB
 
-            if resp.status_code in [200, 302] and is_image:
+            if resp.status_code == 200 and is_real_image:
                 data = _post_with_retry(
                     f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendPhoto",
                     payload={"chat_id": TELEGRAM_CHAT_ID, "caption": caption},
