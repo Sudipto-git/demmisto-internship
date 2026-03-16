@@ -168,33 +168,60 @@ def send_telegram_screenshot(
         except Exception as e:
             log.warning(f"[TELEGRAM] File screenshot failed: {e}")
 
-    # Direct thum.io URL — no file needed!
-    try:
-        url = target if target.startswith("http") else f"https://{target}"
-        thum_url = f"https://image.thum.io/get/width/1280/crop/800/noanimate/{url}"
-        log.info(f"[TELEGRAM] Fetching screenshot from thum.io for {target}")
+    # Screenshot APIs — no key needed, tried in order
+    domain = target.replace("https://", "").replace("http://", "").split("/")[0]
+    url = target if target.startswith("http") else f"https://{target}"
 
-        resp = requests.get(thum_url, timeout=20)
-        if resp.status_code == 200 and len(resp.content) > 5000:
-            data = _post_with_retry(
-                f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendPhoto",
-                payload={"chat_id": TELEGRAM_CHAT_ID, "caption": caption},
-                files={"photo": ("screenshot.png", resp.content, "image/png")},
+    screenshot_apis = [
+        # 1. linkdr.com — completely free, no key, no signup
+        (f"https://linkdr.com/api/screenshot/{domain}", "linkdr"),
+        # 2. thum.io — free tier
+        (f"https://image.thum.io/get/width/1280/crop/800/{url}", "thum.io"),
+        # 3. s-shot.ru — free, no key
+        (f"https://mini.s-shot.ru/1280x800/PNG/1024/Z100/?{url}", "s-shot"),
+        # 4. webscreenshot via allorigins proxy
+        (
+            f"https://api.allorigins.win/raw?url=https://image.thum.io/get/width/1280/{url}",
+            "allorigins",
+        ),
+    ]
+
+    for api_url, api_name in screenshot_apis:
+        try:
+            log.info(f"[TELEGRAM] Trying {api_name}...")
+            resp = requests.get(
+                api_url,
+                timeout=25,
+                allow_redirects=True,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+                },
             )
-            if data.get("ok"):
-                log.info(f"[TELEGRAM] ✅ Screenshot sent via thum.io: {scan_id}")
-                return {"status": "sent"}
-            else:
-                err = data.get("description", "Unknown")
-                log.error(f"[TELEGRAM] ❌ Screenshot failed: {err}")
-                return {"status": "error", "reason": err}
-        else:
-            log.warning(f"[TELEGRAM] thum.io returned {resp.status_code}")
-            return {"status": "error", "reason": f"thum.io returned {resp.status_code}"}
+            content_type = resp.headers.get("content-type", "")
+            is_image = "image" in content_type or len(resp.content) > 10000
 
-    except Exception as e:
-        log.error(f"[TELEGRAM] Screenshot send failed: {e}")
-        return {"status": "error", "reason": str(e)}
+            if resp.status_code in [200, 302] and is_image:
+                data = _post_with_retry(
+                    f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendPhoto",
+                    payload={"chat_id": TELEGRAM_CHAT_ID, "caption": caption},
+                    files={"photo": ("screenshot.png", resp.content, "image/png")},
+                )
+                if data.get("ok"):
+                    log.info(f"[TELEGRAM] ✅ Screenshot sent via {api_name}: {scan_id}")
+                    return {"status": "sent"}
+                else:
+                    err = data.get("description", "Unknown")
+                    log.warning(f"[TELEGRAM] {api_name} send failed: {err}")
+            else:
+                log.warning(
+                    f"[TELEGRAM] {api_name} returned {resp.status_code} size={len(resp.content)}"
+                )
+        except Exception as e:
+            log.warning(f"[TELEGRAM] {api_name} error: {e}")
+            continue
+
+    log.error("[TELEGRAM] All screenshot APIs failed")
+    return {"status": "error", "reason": "All screenshot APIs failed"}
 
 
 def send_telegram_pdf(pdf_path: str, scan_id: str, threat_level: str) -> dict:
