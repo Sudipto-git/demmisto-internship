@@ -248,12 +248,12 @@ async function checkHealth(){
   const dot=document.getElementById('apiDot'), txt=document.getElementById('apiStatusText');
   try{
     const r=await fetch(`${base}/api/health`,{signal:AbortSignal.timeout(4000)});
-    if(r.ok){ dot.className='dot online'; txt.textContent='API ONLINE'; tlog('API connection verified ✓','ok'); }
+    if(r.ok){ dot.className='dot online'; txt.textContent='API ONLINE'; }
     else throw new Error();
-  }catch{ dot.className='dot offline'; txt.textContent='API OFFLINE'; tlog(`Cannot reach ${base}`,'err'); }
+  }catch{ dot.className='dot offline'; txt.textContent='API OFFLINE'; }
 }
 checkHealth();
-setInterval(checkHealth,15000);
+setInterval(checkHealth,60000);
 
 // Type selector
 function setType(type){
@@ -460,7 +460,7 @@ function renderFull(full,base){
         <div style="margin-top:14px;font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin-bottom:6px">◈ SITE SCREENSHOT</div>
         <div class="ss-card" id="ssCard_${scanId}">
           <div class="ss-loading" id="ssLoading_${scanId}">⟳ LOADING SCREENSHOT...</div>
-          <img src="https://image.thum.io/get/width/1280/crop/800/https://${full.target}"
+          <img src="https://api.microlink.io/?url=https://${full.target}&screenshot=true&meta=false&embed=screenshot.url"
             style="display:none;width:100%"
             onload="document.getElementById('ssLoading_${scanId}').style.display='none';this.style.display='block'"
             onerror="document.getElementById('ssCard_${scanId}').innerHTML='<div class=ss-loading style=color:var(--textdim)>✗ SCREENSHOT UNAVAILABLE</div>'"
