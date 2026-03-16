@@ -1,6 +1,5 @@
 # Terminal 1 — Start Flask API
-cd /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project
-python3 app.py
+/usr/local/bin/python3 /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/app.py
 
 # Terminal 2 — Start Dashboard
 cd /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project

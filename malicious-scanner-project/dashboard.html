@@ -176,7 +176,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:14p
       <div class="section-label">API Config</div>
       <div style="font-size:.6rem;color:var(--textdim);margin-bottom:4px;letter-spacing:1px">n8n: home=192.168.0.10:5678 | anywhere=100.91.244.44:5678</div>
       <input class="cfg-input" id="n8nBase"   value="http://100.91.244.44:5678" placeholder="n8n Webhook URL" title="Local: http://192.168.0.10:5678 | Tailscale: http://100.91.244.44:5678"/>
-      <input class="cfg-input" id="apiBase"   value="http://localhost:5001" placeholder="Flask API URL (health only)"/>
+      <input class="cfg-input" id="apiBase"   value="https://demmisto-internship.onrender.com" placeholder="Flask API URL (health only)"/>
       <input class="cfg-input" id="apiSecret" value="darkweb_secret_2024"   placeholder="X-API-Secret"/>
       <button onclick="checkHealth()" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--textdim);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:7px;cursor:pointer;letter-spacing:2px;margin-top:0" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border2)'">⟳ CHECK CONNECTION</button>
     </div>
