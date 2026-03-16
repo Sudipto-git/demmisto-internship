@@ -110,3 +110,68 @@ Call log:
 2026-03-16 17:58:59,378 [INFO] 127.0.0.1 - - [16/Mar/2026 17:58:59] "GET /api/health HTTP/1.1" 200 -
 2026-03-16 17:59:14,429 [INFO] 127.0.0.1 - - [16/Mar/2026 17:59:14] "GET /api/health HTTP/1.1" 200 -
 2026-03-16 18:02:38,846 [INFO] 127.0.0.1 - - [16/Mar/2026 18:02:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:30:19,051 [INFO] 127.0.0.1 - - [16/Mar/2026 18:30:19] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:30:34,157 [INFO] 127.0.0.1 - - [16/Mar/2026 18:30:34] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:30:54,647 [INFO] 127.0.0.1 - - [16/Mar/2026 18:30:54] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:31:12,010 [INFO] 127.0.0.1 - - [16/Mar/2026 18:31:12] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:31:52,902 [INFO] 127.0.0.1 - - [16/Mar/2026 18:31:52] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:32:09,951 [INFO] 127.0.0.1 - - [16/Mar/2026 18:32:09] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:33:17,189 [INFO] 127.0.0.1 - - [16/Mar/2026 18:33:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:33:21,691 [INFO] 127.0.0.1 - - [16/Mar/2026 18:33:21] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-16 18:33:21,694 [INFO] [FULL SCAN] DWM-B3DF1BA0 | domain: https://instaqram-l0g1n.netlify.app/
+2026-03-16 18:33:21,695 [INFO] [DOMAIN] Scanning: https://instaqram-l0g1n.netlify.app/
+2026-03-16 18:33:23,989 [INFO] [DOMAIN] Done. Threat: CLEAN
+2026-03-16 18:33:23,991 [INFO] [AI] Analyzing domain with Groq...
+2026-03-16 18:33:24,996 [INFO] [AI] Done. Tokens: 571
+2026-03-16 18:33:25,000 [INFO] [FULL SCAN] Taking screenshot of https://instaqram-l0g1n.netlify.app/...
+2026-03-16 18:33:25,001 [INFO] [SCREENSHOT] Taking screenshot of: https://instaqram-l0g1n.netlify.app/
+2026-03-16 18:33:32,174 [INFO] 127.0.0.1 - - [16/Mar/2026 18:33:32] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:33:32,192 [INFO] [SCREENSHOT] ✅ Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/screenshots/screenshot_DWM-B3DF1BA0.png
+2026-03-16 18:33:32,192 [INFO] [FULL SCAN] Screenshot saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/screenshots/screenshot_DWM-B3DF1BA0.png
+2026-03-16 18:33:32,200 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-B3DF1BA0.pdf
+2026-03-16 18:33:32,200 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-B3DF1BA0.pdf
+2026-03-16 18:33:32,200 [INFO] [FULL SCAN] Sending Telegram alerts for MEDIUM...
+2026-03-16 18:33:32,932 [INFO] [TELEGRAM] ✅ Alert sent. ID: 37
+2026-03-16 18:33:35,339 [INFO] [TELEGRAM] ✅ Screenshot sent: DWM-B3DF1BA0
+2026-03-16 18:33:36,379 [INFO] [TELEGRAM] ✅ PDF sent: DWM-B3DF1BA0
+2026-03-16 18:33:36,380 [INFO] [FULL SCAN] Alerts: {'telegram': {'status': 'sent', 'message_id': 37}, 'telegram_screenshot': {'status': 'sent'}, 'telegram_pdf': {'status': 'sent'}}
+2026-03-16 18:33:36,380 [INFO] [FULL SCAN] Complete: DWM-B3DF1BA0 | MEDIUM
+2026-03-16 18:33:36,381 [INFO] 127.0.0.1 - - [16/Mar/2026 18:33:36] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-16 18:33:47,184 [INFO] 127.0.0.1 - - [16/Mar/2026 18:33:47] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:34:02,183 [INFO] 127.0.0.1 - - [16/Mar/2026 18:34:02] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:34:17,264 [INFO] 127.0.0.1 - - [16/Mar/2026 18:34:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:34:32,238 [INFO] 127.0.0.1 - - [16/Mar/2026 18:34:32] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:34:47,248 [INFO] 127.0.0.1 - - [16/Mar/2026 18:34:47] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:35:02,249 [INFO] 127.0.0.1 - - [16/Mar/2026 18:35:02] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:35:17,249 [INFO] 127.0.0.1 - - [16/Mar/2026 18:35:17] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:35:32,251 [INFO] 127.0.0.1 - - [16/Mar/2026 18:35:32] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:35:47,245 [INFO] 127.0.0.1 - - [16/Mar/2026 18:35:47] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:36:02,256 [INFO] 127.0.0.1 - - [16/Mar/2026 18:36:02] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:38:14,239 [INFO] 127.0.0.1 - - [16/Mar/2026 18:38:14] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:38:29,242 [INFO] 127.0.0.1 - - [16/Mar/2026 18:38:29] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:38:44,240 [INFO] 127.0.0.1 - - [16/Mar/2026 18:38:44] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:38:59,239 [INFO] 127.0.0.1 - - [16/Mar/2026 18:38:59] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:39:14,314 [INFO] 127.0.0.1 - - [16/Mar/2026 18:39:14] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:40:23,601 [INFO] 127.0.0.1 - - [16/Mar/2026 18:40:23] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:40:32,333 [INFO] 127.0.0.1 - - [16/Mar/2026 18:40:32] "OPTIONS /api/scan/full HTTP/1.1" 200 -
+2026-03-16 18:40:32,340 [INFO] [FULL SCAN] DWM-5D86A76A | ip: 192.168.56.1
+2026-03-16 18:40:32,341 [INFO] [IP] Scanning: 192.168.56.1
+2026-03-16 18:40:33,048 [INFO] [IP] Done. Threat: CLEAN
+2026-03-16 18:40:33,048 [INFO] [AI] Analyzing ip with Groq...
+2026-03-16 18:40:34,056 [INFO] [AI] Done. Tokens: 497
+2026-03-16 18:40:34,059 [INFO] [FULL SCAN] Taking screenshot of 192.168.56.1...
+2026-03-16 18:40:34,060 [INFO] [SCREENSHOT] Taking screenshot of: https://192.168.56.1
+2026-03-16 18:40:38,584 [INFO] 127.0.0.1 - - [16/Mar/2026 18:40:38] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:40:46,524 [WARNING] [SCREENSHOT] Navigation warning: Page.goto: net::ERR_NETWORK_CHANGED at https://192.168.56.1/
+Call log:
+  - navigating to "https://192.168.56.1/", waiting until "domcontentloaded"
+
+2026-03-16 18:40:46,748 [INFO] [SCREENSHOT] ✅ Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/screenshots/screenshot_DWM-5D86A76A.png
+2026-03-16 18:40:46,748 [INFO] [FULL SCAN] Screenshot saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/screenshots/screenshot_DWM-5D86A76A.png
+2026-03-16 18:40:46,756 [INFO] [PDF] Saved: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-5D86A76A.pdf
+2026-03-16 18:40:46,756 [INFO] [FULL SCAN] PDF: /Volumes/X/coding/code/demmisto-internship/malicious-scanner-project/reports/output/threat_report_DWM-5D86A76A.pdf
+2026-03-16 18:40:46,756 [INFO] [FULL SCAN] Complete: DWM-5D86A76A | CLEAN
+2026-03-16 18:40:46,757 [INFO] 127.0.0.1 - - [16/Mar/2026 18:40:46] "POST /api/scan/full HTTP/1.1" 200 -
+2026-03-16 18:47:48,219 [INFO] 127.0.0.1 - - [16/Mar/2026 18:47:48] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:48:03,282 [INFO] 127.0.0.1 - - [16/Mar/2026 18:48:03] "GET /api/health HTTP/1.1" 200 -
+2026-03-16 18:48:18,274 [INFO] 127.0.0.1 - - [16/Mar/2026 18:48:18] "GET /api/health HTTP/1.1" 200 -
