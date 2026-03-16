@@ -174,8 +174,8 @@ header{display:flex;align-items:center;justify-content:space-between;padding:14p
   <aside class="sidebar">
     <div class="sidebar-section">
       <div class="section-label">API Config</div>
-      <div style="font-size:.6rem;color:var(--textdim);margin-bottom:4px;letter-spacing:1px">n8n: local=192.168.0.10:5678 | remote=100.91.244.44:5678</div>
-      <input class="cfg-input" id="n8nBase"   value="http://192.168.0.10:5678" placeholder="n8n Webhook URL" title="Local: http://192.168.0.10:5678 | Tailscale: http://100.91.244.44:5678"/>
+      <div style="font-size:.6rem;color:var(--textdim);margin-bottom:4px;letter-spacing:1px">n8n: home=192.168.0.10:5678 | anywhere=100.91.244.44:5678</div>
+      <input class="cfg-input" id="n8nBase"   value="http://100.91.244.44:5678" placeholder="n8n Webhook URL" title="Local: http://192.168.0.10:5678 | Tailscale: http://100.91.244.44:5678"/>
       <input class="cfg-input" id="apiBase"   value="http://localhost:5001" placeholder="Flask API URL (health only)"/>
       <input class="cfg-input" id="apiSecret" value="darkweb_secret_2024"   placeholder="X-API-Secret"/>
       <button onclick="checkHealth()" style="width:100%;background:transparent;border:1px solid var(--border2);color:var(--textdim);font-family:'Share Tech Mono',monospace;font-size:.65rem;padding:7px;cursor:pointer;letter-spacing:2px;margin-top:0" onmouseover="this.style.borderColor='var(--green)'" onmouseout="this.style.borderColor='var(--border2)'">⟳ CHECK CONNECTION</button>
@@ -271,10 +271,11 @@ function tlog(msg,type=''){
   t.appendChild(row); t.scrollTop=t.scrollHeight;
 }
 
-// Main scan — ALL types routed through n8n
+// Main scan — smart routing: n8n if reachable, else Flask direct
 async function runScan(){
   const base   = document.getElementById('apiBase').value.trim();
   const n8nUrl = document.getElementById('n8nBase').value.trim();
+  const secret = document.getElementById('apiSecret').value.trim();
   const target = document.getElementById('targetInput').value.trim();
   const type   = currentType;
 
@@ -284,10 +285,7 @@ async function runScan(){
   const prog = document.getElementById('progressFill');
   btn.disabled=true; btn.textContent='⟳ SCANNING...'; prog.classList.add('running');
 
-  tlog(`Starting ${type.toUpperCase()} scan${target?' → '+target:''}...`,'info');
-  tlog(`Routing through n8n → ${n8nUrl}/webhook/darkweb-scan`,'info');
-
-  // Auto detect type for n8n
+  // Auto detect scan type
   let scanType = type;
   if(type==='domain'||type==='full'){
     scanType = target.match(/^\d{1,3}(\.\d{1,3}){3}$/) ? 'ip' : 'domain';
@@ -304,30 +302,74 @@ async function runScan(){
     payload.domains  = document.getElementById('pasteDomains').value.split(',').map(d=>d.trim()).filter(Boolean);
   }
 
+  // ── Try n8n first, fallback to Flask direct ──────────
+  let useN8n = false;
+  tlog(`Checking n8n at ${n8nUrl}...`,'info');
   try{
-    const r = await fetch(`${n8nUrl}/webhook/darkweb-scan`,{
-      method:  'POST',
+    const ping = await fetch(`${n8nUrl}/webhook/darkweb-scan`, {
+      method: 'POST',
       headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({target:'health-check', type:'domain'}),
+      signal: AbortSignal.timeout(3000)
+    });
+    useN8n = ping.status !== 0;
+  }catch(e){ useN8n = false; }
+
+  if(useN8n){
+    // ── Route through n8n ───────────────────────────
+    tlog(`Starting ${scanType.toUpperCase()} scan → ${target||'paste'}...`,'info');
+    tlog(`Routing through n8n → ${n8nUrl}`,'info');
+    try{
+      const r = await fetch(`${n8nUrl}/webhook/darkweb-scan`,{
+        method:  'POST',
+        headers: {'Content-Type':'application/json'},
+        body:    JSON.stringify(payload)
+      });
+      if(!r.ok) throw new Error(`n8n HTTP ${r.status}`);
+      const full = await r.json();
+      tlog(`n8n complete — ${full.threat_level||'UNKNOWN'}`, full.threat_level==='CLEAN'?'ok':'warn');
+      tlog(`Network: ${full.network_used||'n8n'} | TG: ${full.tg_sent?'✓':'✗'} | PDF: ${full.tg_pdf_sent?'✓':'✗'} | Screenshot: ${full.tg_screenshot_sent?'✓':'✗'}`,'info');
+      renderFull(full, base);
+      addHistory(target||'paste', full.threat_level||'UNKNOWN');
+    }catch(err){
+      tlog(`n8n error: ${err.message} — falling back to Flask direct`,'warn');
+      await runFlaskDirect(base, secret, payload, target, scanType);
+    }
+  } else {
+    // ── n8n unreachable — call Flask API directly ───
+    tlog(`n8n offline — calling Flask API directly...`,'warn');
+    tlog(`Starting ${scanType.toUpperCase()} scan → ${target||'paste'}...`,'info');
+    await runFlaskDirect(base, secret, payload, target, scanType);
+  }
+
+  btn.disabled=false; btn.textContent='▶ INITIATE SCAN'; prog.classList.remove('running');
+}
+
+async function runFlaskDirect(base, secret, payload, target, scanType){
+  try{
+    tlog(`Connecting to Flask: ${base}/api/scan/full`,'info');
+    const r = await fetch(`${base}/api/scan/full`,{
+      method:  'POST',
+      headers: {'Content-Type':'application/json','X-API-Secret': secret},
       body:    JSON.stringify(payload)
     });
-
-    if(!r.ok) throw new Error(`n8n returned HTTP ${r.status}`);
-
+    if(!r.ok) throw new Error(`Flask HTTP ${r.status}`);
     const full = await r.json();
-
-    tlog(`n8n pipeline complete — ${full.threat_level||'UNKNOWN'}`, full.threat_level==='CLEAN'?'ok':'warn');
-    tlog(`Network: ${full.network_used||'unknown'} | TG: ${full.tg_sent?'✓ sent':'✗ not sent'} | PDF: ${full.tg_pdf_sent?'✓ sent':'✗ not sent'}`,'info');
-    tlog(`Screenshot: ${full.tg_screenshot_sent?'✓ sent':'✗ not sent'} | Tokens: ${full.tokens_used||0}`,'info');
-
-    renderFull(full, base);
+    tlog(`Flask complete — ${full.threat_level||'UNKNOWN'}`, full.threat_level==='CLEAN'?'ok':'warn');
+    tlog(`TG: ${full.alerts_sent?.telegram?.status==='sent'?'✓ sent':'✗'} | PDF: ${full.pdf_url?'✓':'✗'}`,'info');
+    // Normalize response to match n8n format
+    const normalized = {
+      ...full,
+      tg_sent:            full.alerts_sent?.telegram?.status==='sent',
+      tg_pdf_sent:        full.alerts_sent?.telegram_pdf?.status==='sent',
+      tg_screenshot_sent: full.alerts_sent?.telegram_screenshot?.status==='sent',
+      network_used:       'direct'
+    };
+    renderFull(normalized, base);
     addHistory(target||'paste', full.threat_level||'UNKNOWN');
-
   }catch(err){
     tlog(`ERROR: ${err.message}`,'err');
-    tlog('Is n8n running? Check: '+n8nUrl,'warn');
-    document.getElementById('resultsArea').innerHTML=`<div class="empty"><div style="color:var(--red);font-size:1.5rem">⚠</div><div style="color:var(--red);letter-spacing:3px;font-size:.8rem">N8N CONNECTION FAILED</div><div style="color:var(--textdim);font-size:.7rem">${err.message}</div></div>`;
-  }finally{
-    btn.disabled=false; btn.textContent='▶ INITIATE SCAN'; prog.classList.remove('running');
+    document.getElementById('resultsArea').innerHTML=`<div class="empty"><div style="color:var(--red);font-size:1.5rem">⚠</div><div style="color:var(--red);letter-spacing:3px;font-size:.8rem">CONNECTION FAILED</div><div style="color:var(--textdim);font-size:.7rem">${err.message}</div></div>`;
   }
 }
 
