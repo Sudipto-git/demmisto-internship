@@ -223,7 +223,29 @@ def api_full_scan():
                 report["screenshot_path"] = screenshot_path
                 log.info(f"[FULL SCAN] Screenshot saved: {screenshot_path}")
             else:
-                log.warning("[FULL SCAN] Screenshot returned empty path")
+                log.warning(
+                    "[FULL SCAN] Screenshot module returned empty — trying direct API..."
+                )
+                import requests as req
+
+                ss_url = target if target.startswith("http") else f"https://{target}"
+                api_url = (
+                    f"https://image.thum.io/get/width/1280/crop/800/noanimate/{ss_url}"
+                )
+                ss_dir = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "reports", "screenshots"
+                )
+                os.makedirs(ss_dir, exist_ok=True)
+                ss_file = os.path.join(ss_dir, f"screenshot_{scan_id}.png")
+                resp = req.get(api_url, timeout=20)
+                if resp.status_code == 200 and len(resp.content) > 5000:
+                    with open(ss_file, "wb") as f:
+                        f.write(resp.content)
+                    screenshot_path = ss_file
+                    report["screenshot_path"] = screenshot_path
+                    log.info(f"[FULL SCAN] Direct API screenshot saved: {ss_file}")
+                else:
+                    log.warning(f"[FULL SCAN] Direct API failed: {resp.status_code}")
         except Exception as e:
             log.warning(f"[FULL SCAN] Screenshot failed: {e}")
 
