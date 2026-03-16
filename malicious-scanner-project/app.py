@@ -222,7 +222,21 @@ def api_full_scan():
             if screenshot_path:
                 report["screenshot_path"] = screenshot_path
                 log.info(f"[FULL SCAN] Screenshot saved: {screenshot_path}")
+                # Save target mapping for /api/screenshot/<scan_id>
+                ss_dir = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "reports", "screenshots"
+                )
+                os.makedirs(ss_dir, exist_ok=True)
+                with open(os.path.join(ss_dir, f"{scan_id}.txt"), "w") as mf:
+                    mf.write(target)
             else:
+                # Still save target mapping for dashboard endpoint
+                ss_dir = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)), "reports", "screenshots"
+                )
+                os.makedirs(ss_dir, exist_ok=True)
+                with open(os.path.join(ss_dir, f"{scan_id}.txt"), "w") as mf:
+                    mf.write(target)
                 log.warning(
                     "[FULL SCAN] Screenshot module returned empty — trying direct API..."
                 )
@@ -267,12 +281,7 @@ def api_full_scan():
         # 1. Text alert
         alerts_sent["telegram"] = send_telegram_alert(report)
 
-        # 2. Screenshot — always attempt (thum.io fallback handles no-file case)
-        alerts_sent["telegram_screenshot"] = send_telegram_screenshot(
-            screenshot_path, scan_id, target, threat_level
-        )
-
-        # 3. PDF report
+        # 2. PDF report
         alerts_sent["telegram_pdf"] = send_telegram_pdf(pdf_path, scan_id, threat_level)
 
         report["alerts_sent"] = alerts_sent
@@ -309,6 +318,40 @@ def download_report(scan_id):
     return send_file(
         pdf_file, as_attachment=True, download_name=f"threat_report_{scan_id}.pdf"
     )
+
+
+# ══════════════════════════════════════════════════════
+#  SERVE SCREENSHOT
+# ══════════════════════════════════════════════════════
+@app.route("/api/screenshot/<scan_id>", methods=["GET"])
+def serve_screenshot(scan_id):
+    import requests as req
+
+    ss_dir = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "reports", "screenshots"
+    )
+    ss_file = os.path.join(ss_dir, f"screenshot_{scan_id}.png")
+
+    # Serve saved file if exists
+    if os.path.exists(ss_file):
+        return send_file(ss_file, mimetype="image/png")
+
+    # Try to get target from scan_id mapping file
+    map_file = os.path.join(ss_dir, f"{scan_id}.txt")
+    if os.path.exists(map_file):
+        with open(map_file) as f:
+            target = f.read().strip()
+        url = target if target.startswith("http") else f"https://{target}"
+        try:
+            resp = req.get(
+                f"https://image.thum.io/get/width/1280/crop/800/{url}", timeout=20
+            )
+            if resp.status_code == 200 and len(resp.content) > 50000:
+                return resp.content, 200, {"Content-Type": "image/png"}
+        except Exception as e:
+            log.warning(f"[SCREENSHOT] thum.io fallback failed: {e}")
+
+    return jsonify({"error": "Screenshot not found"}), 404
 
 
 # ══════════════════════════════════════════════════════
