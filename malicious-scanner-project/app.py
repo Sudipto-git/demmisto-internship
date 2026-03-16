@@ -267,16 +267,10 @@ def api_full_scan():
         # 1. Text alert
         alerts_sent["telegram"] = send_telegram_alert(report)
 
-        # 2. Screenshot (sent before PDF so user sees site first)
-        if screenshot_path:
-            alerts_sent["telegram_screenshot"] = send_telegram_screenshot(
-                screenshot_path, scan_id, target, threat_level
-            )
-        else:
-            alerts_sent["telegram_screenshot"] = {
-                "status": "skipped",
-                "reason": "No screenshot",
-            }
+        # 2. Screenshot — always attempt (thum.io fallback handles no-file case)
+        alerts_sent["telegram_screenshot"] = send_telegram_screenshot(
+            screenshot_path, scan_id, target, threat_level
+        )
 
         # 3. PDF report
         alerts_sent["telegram_pdf"] = send_telegram_pdf(pdf_path, scan_id, threat_level)

@@ -5,6 +5,7 @@
 ╚══════════════════════════════════════════╝
 """
 
+import os
 import requests
 import logging
 import time
@@ -17,11 +18,15 @@ TG_API = "https://api.telegram.org/bot"
 
 def _clean_text(text: str) -> str:
     """Strip all markdown to prevent Telegram parse errors"""
-    return (text
-        .replace("**", "").replace("*", "")
-        .replace("`", "").replace("#", "")
-        .replace("[", "(").replace("]", ")")
-        .replace("<", "").replace(">", "")
+    return (
+        text.replace("**", "")
+        .replace("*", "")
+        .replace("`", "")
+        .replace("#", "")
+        .replace("[", "(")
+        .replace("]", ")")
+        .replace("<", "")
+        .replace(">", "")
         .strip()
     )
 
@@ -73,15 +78,18 @@ def send_telegram_alert(report: dict) -> dict:
         return {"status": "error", "reason": "Bot token or chat ID not set"}
 
     threat_level = report.get("threat_level", "UNKNOWN")
-    target_type  = report.get("target_type",  "unknown")
-    target       = report.get("target",       "N/A")
-    scan_id      = report.get("scan_id",      "N/A")
-    ai_analysis  = _clean_text(report.get("ai_analysis", ""))
+    target_type = report.get("target_type", "unknown")
+    target = report.get("target", "N/A")
+    scan_id = report.get("scan_id", "N/A")
+    ai_analysis = _clean_text(report.get("ai_analysis", ""))
     completed_at = report.get("completed_at", datetime.utcnow().isoformat())
 
     emoji = {
-        "CRITICAL": "🔴", "HIGH": "🟠",
-        "MEDIUM":   "🟡", "LOW":  "🟢", "CLEAN": "✅"
+        "CRITICAL": "🔴",
+        "HIGH": "🟠",
+        "MEDIUM": "🟡",
+        "LOW": "🟢",
+        "CLEAN": "✅",
     }.get(threat_level, "⚪")
 
     # First meaningful AI summary line
@@ -110,7 +118,7 @@ def send_telegram_alert(report: dict) -> dict:
 
     data = _post_with_retry(
         f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendMessage",
-        {"chat_id": TELEGRAM_CHAT_ID, "text": message}
+        {"chat_id": TELEGRAM_CHAT_ID, "text": message},
     )
 
     if data.get("ok"):
@@ -122,47 +130,68 @@ def send_telegram_alert(report: dict) -> dict:
         return {"status": "error", "reason": err}
 
 
-def send_telegram_screenshot(screenshot_path: str, scan_id: str,
-                              target: str, threat_level: str) -> dict:
-    """Send screenshot of malicious site"""
+def send_telegram_screenshot(
+    screenshot_path: str, scan_id: str, target: str, threat_level: str
+) -> dict:
+    """Send screenshot — file if exists, otherwise fetch from thum.io directly"""
 
     if not TG_ENABLED:
         return {"status": "skipped"}
 
-    if not screenshot_path:
-        return {"status": "skipped", "reason": "No screenshot path"}
-
     emoji = {
-        "CRITICAL": "🔴", "HIGH": "🟠",
-        "MEDIUM":   "🟡", "LOW":  "🟢", "CLEAN": "✅"
+        "CRITICAL": "🔴",
+        "HIGH": "🟠",
+        "MEDIUM": "🟡",
+        "LOW": "🟢",
+        "CLEAN": "✅",
     }.get(threat_level, "⚪")
 
+    caption = (
+        f"{emoji} SITE SCREENSHOT\n"
+        f"Target  : {target}\n"
+        f"Threat  : {threat_level}\n"
+        f"Scan ID : {scan_id}"
+    )
+
+    # Try file first
+    if screenshot_path and os.path.exists(screenshot_path):
+        try:
+            with open(screenshot_path, "rb") as f:
+                data = _post_with_retry(
+                    f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendPhoto",
+                    payload={"chat_id": TELEGRAM_CHAT_ID, "caption": caption},
+                    files={"photo": f},
+                )
+            if data.get("ok"):
+                log.info(f"[TELEGRAM] ✅ Screenshot sent from file: {scan_id}")
+                return {"status": "sent"}
+        except Exception as e:
+            log.warning(f"[TELEGRAM] File screenshot failed: {e}")
+
+    # Direct thum.io URL — no file needed!
     try:
-        with open(screenshot_path, "rb") as f:
+        url = target if target.startswith("http") else f"https://{target}"
+        thum_url = f"https://image.thum.io/get/width/1280/crop/800/noanimate/{url}"
+        log.info(f"[TELEGRAM] Fetching screenshot from thum.io for {target}")
+
+        resp = requests.get(thum_url, timeout=20)
+        if resp.status_code == 200 and len(resp.content) > 5000:
             data = _post_with_retry(
                 f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendPhoto",
-                payload={
-                    "chat_id": TELEGRAM_CHAT_ID,
-                    "caption": (
-                        f"{emoji} SITE SCREENSHOT\n"
-                        f"Target  : {target}\n"
-                        f"Threat  : {threat_level}\n"
-                        f"Scan ID : {scan_id}"
-                    )
-                },
-                files={"photo": f}
+                payload={"chat_id": TELEGRAM_CHAT_ID, "caption": caption},
+                files={"photo": ("screenshot.png", resp.content, "image/png")},
             )
-
-        if data.get("ok"):
-            log.info(f"[TELEGRAM] ✅ Screenshot sent: {scan_id}")
-            return {"status": "sent"}
+            if data.get("ok"):
+                log.info(f"[TELEGRAM] ✅ Screenshot sent via thum.io: {scan_id}")
+                return {"status": "sent"}
+            else:
+                err = data.get("description", "Unknown")
+                log.error(f"[TELEGRAM] ❌ Screenshot failed: {err}")
+                return {"status": "error", "reason": err}
         else:
-            err = data.get("description", "Unknown")
-            log.error(f"[TELEGRAM] ❌ Screenshot failed: {err}")
-            return {"status": "error", "reason": err}
+            log.warning(f"[TELEGRAM] thum.io returned {resp.status_code}")
+            return {"status": "error", "reason": f"thum.io returned {resp.status_code}"}
 
-    except FileNotFoundError:
-        return {"status": "error", "reason": "Screenshot file not found"}
     except Exception as e:
         log.error(f"[TELEGRAM] Screenshot send failed: {e}")
         return {"status": "error", "reason": str(e)}
@@ -183,9 +212,9 @@ def send_telegram_pdf(pdf_path: str, scan_id: str, threat_level: str) -> dict:
                 f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendDocument",
                 payload={
                     "chat_id": TELEGRAM_CHAT_ID,
-                    "caption": f"Threat Report {scan_id} — {threat_level}"
+                    "caption": f"Threat Report {scan_id} — {threat_level}",
                 },
-                files={"document": f}
+                files={"document": f},
             )
 
         if data.get("ok"):
@@ -209,6 +238,10 @@ def send_telegram_simple(message: str) -> dict:
         return {"status": "error", "reason": "Keys not set"}
     data = _post_with_retry(
         f"{TG_API}{TELEGRAM_BOT_TOKEN}/sendMessage",
-        {"chat_id": TELEGRAM_CHAT_ID, "text": message}
+        {"chat_id": TELEGRAM_CHAT_ID, "text": message},
     )
-    return {"status": "sent"} if data.get("ok") else {"status": "error", "reason": data.get("description")}
+    return (
+        {"status": "sent"}
+        if data.get("ok")
+        else {"status": "error", "reason": data.get("description")}
+    )
