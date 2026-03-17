@@ -460,10 +460,35 @@ function renderFull(full,base){
         <div style="margin-top:14px;font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin-bottom:6px">◈ SITE SCREENSHOT</div>
         <div class="ss-card" id="ssCard_${scanId}">
           <div class="ss-loading" id="ssLoading_${scanId}">⟳ LOADING SCREENSHOT...</div>
-          <img src="https://api.microlink.io/?url=https://${full.target}&screenshot=true&meta=false&embed=screenshot.url"
+          <img id="ssImg_${scanId}"
+            src="https://image.thum.io/get/width/1280/crop/800/https://${full.target}"
             style="display:none;width:100%"
-            onload="document.getElementById('ssLoading_${scanId}').style.display='none';this.style.display='block'"
-            onerror="document.getElementById('ssCard_${scanId}').innerHTML='<div class=ss-loading style=color:var(--textdim)>✗ SCREENSHOT UNAVAILABLE</div>'"
+            onload="
+              var img=this;
+              var canvas=document.createElement('canvas');
+              canvas.width=img.naturalWidth; canvas.height=img.naturalHeight;
+              var ctx=canvas.getContext('2d');
+              ctx.drawImage(img,0,0);
+              var pixel=ctx.getImageData(img.naturalWidth/2,img.naturalHeight/2,1,1).data;
+              var isBlank=(pixel[0]>240&&pixel[1]>240&&pixel[2]>240);
+              if(isBlank){
+                document.getElementById('ssCard_${scanId}').innerHTML=\`<div style='padding:20px;text-align:center'>
+                  <div style='font-size:2rem'>🚫</div>
+                  <div style='color:var(--red);font-size:.7rem;letter-spacing:2px;margin-top:8px'>SITE OFFLINE / BLOCKED</div>
+                  <div style='color:var(--textdim);font-size:.65rem;margin-top:4px'>${full.target} refused connection</div>
+                  <div style='color:var(--green2);font-size:.6rem;margin-top:8px'>⚠ Confirms malicious — site actively hiding</div>
+                </div>\`;
+              } else {
+                document.getElementById('ssLoading_${scanId}').style.display='none';
+                img.style.display='block';
+              }
+            "
+            onerror="document.getElementById('ssCard_${scanId}').innerHTML=\`<div style='padding:20px;text-align:center'>
+              <div style='font-size:2rem'>🚫</div>
+              <div style='color:var(--red);font-size:.7rem;letter-spacing:2px;margin-top:8px'>SITE OFFLINE / BLOCKED</div>
+              <div style='color:var(--textdim);font-size:.65rem;margin-top:4px'>${full.target} refused connection</div>
+              <div style='color:var(--green2);font-size:.6rem;margin-top:8px'>⚠ Confirms malicious — site actively hiding</div>
+            </div>\`"
           />
           <div class="ss-label">🌐 ${full.target} — LIVE CAPTURE</div>
         </div>
