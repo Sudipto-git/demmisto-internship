@@ -334,6 +334,7 @@ async function runScan(){
       tlog(`n8n complete — ${full.threat_level||'UNKNOWN'}`, full.threat_level==='CLEAN'?'ok':'warn');
       tlog(`Network: ${full.network_used||'n8n'} | TG: ${full.tg_sent?'✓':'✗'} | PDF: ${full.tg_pdf_sent?'✓':'✗'} | Screenshot: ${full.tg_screenshot_sent?'✓':'✗'}`,'info');
       renderFull(full, base);
+    setTimeout(()=>lazyLoadScreenshot(full.scan_id, full.target), 500);
       addHistory(target||'paste', full.threat_level||'UNKNOWN');
     }catch(err){
       tlog(`n8n error: ${err.message} — falling back to Flask direct`,'warn');
@@ -370,6 +371,7 @@ async function runFlaskDirect(base, secret, payload, target, scanType){
       network_used:       'direct'
     };
     renderFull(normalized, base);
+    setTimeout(()=>lazyLoadScreenshot(normalized.scan_id, normalized.target), 500);
     addHistory(target||'paste', full.threat_level||'UNKNOWN');
   }catch(err){
     tlog(`ERROR: ${err.message}`,'err');
@@ -457,45 +459,64 @@ function renderFull(full,base){
         <div class="alert-row ${tgSent?'sent':'skip'}">${tgSent?'✓ Telegram alert sent':'— '+(alerts.telegram?.reason||alerts.reason||'No alert needed')}</div>
         <div class="alert-row ${alerts.telegram_pdf?.status==='sent'?'sent':'skip'}">${alerts.telegram_pdf?.status==='sent'?'✓ PDF sent to Telegram':'— PDF Telegram: '+(alerts.telegram_pdf?.reason||'not sent')}</div>
         ${pdfUrl?`<a href="${base}${pdfUrl}" target="_blank"><button class="pdf-btn">📄 DOWNLOAD PDF REPORT</button></a>`:''}
-        <div style="margin-top:14px;font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin-bottom:6px">◈ SITE SCREENSHOT</div>
+        <div style="margin-top:14px;font-size:.62rem;color:var(--textdim);letter-spacing:2px;margin-bottom:6px">◈ SITE EVIDENCE</div>
         <div class="ss-card" id="ssCard_${scanId}">
-          <div class="ss-loading" id="ssLoading_${scanId}">⟳ LOADING SCREENSHOT...</div>
-          <img id="ssImg_${scanId}"
-            src="https://image.thum.io/get/width/1280/crop/800/https://${full.target}"
-            style="display:none;width:100%"
-            onload="
-              var img=this;
-              var canvas=document.createElement('canvas');
-              canvas.width=img.naturalWidth; canvas.height=img.naturalHeight;
-              var ctx=canvas.getContext('2d');
-              ctx.drawImage(img,0,0);
-              var pixel=ctx.getImageData(img.naturalWidth/2,img.naturalHeight/2,1,1).data;
-              var isBlank=(pixel[0]>240&&pixel[1]>240&&pixel[2]>240);
-              if(isBlank){
-                document.getElementById('ssCard_${scanId}').innerHTML=\`<div style='padding:20px;text-align:center'>
-                  <div style='font-size:2rem'>🚫</div>
-                  <div style='color:var(--red);font-size:.7rem;letter-spacing:2px;margin-top:8px'>SITE OFFLINE / BLOCKED</div>
-                  <div style='color:var(--textdim);font-size:.65rem;margin-top:4px'>${full.target} refused connection</div>
-                  <div style='color:var(--green2);font-size:.6rem;margin-top:8px'>⚠ Confirms malicious — site actively hiding</div>
-                </div>\`;
-              } else {
-                document.getElementById('ssLoading_${scanId}').style.display='none';
-                img.style.display='block';
-              }
-            "
-            onerror="document.getElementById('ssCard_${scanId}').innerHTML=\`<div style='padding:20px;text-align:center'>
-              <div style='font-size:2rem'>🚫</div>
-              <div style='color:var(--red);font-size:.7rem;letter-spacing:2px;margin-top:8px'>SITE OFFLINE / BLOCKED</div>
-              <div style='color:var(--textdim);font-size:.65rem;margin-top:4px'>${full.target} refused connection</div>
-              <div style='color:var(--green2);font-size:.6rem;margin-top:8px'>⚠ Confirms malicious — site actively hiding</div>
-            </div>\`"
-          />
-          <div class="ss-label">🌐 ${full.target} — LIVE CAPTURE</div>
+          <div class="ss-loading" id="ssLoading_${scanId}">⟳ LOADING PREVIEW...</div>
         </div>
       </div>
     </div>
     ${aiCard({ai_analysis:full.ai_analysis,model:full.model,tokens_used:full.tokens_used})}
   </div>`;
+}
+
+function lazyLoadScreenshot(scanId, target){
+  const card = document.getElementById('ssCard_'+scanId);
+  if(!card) return;
+
+  // Try screenshot APIs in order
+  const apis = [
+    `https://image.thum.io/get/width/1280/crop/800/https://${target}`,
+    `https://mini.s-shot.ru/1280x800/PNG/1024/Z100/?https://${target}`,
+  ];
+
+  let tried = 0;
+  function tryNext(){
+    if(tried >= apis.length){
+      // All failed — show evidence card with scan data
+      card.innerHTML = `
+        <div style="padding:16px;background:#010603">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <span style="font-size:1.4rem">🚫</span>
+            <div>
+              <div style="color:var(--red);font-size:.7rem;letter-spacing:2px">SCREENSHOT BLOCKED</div>
+              <div style="color:var(--textdim);font-size:.62rem">${target} — refused screenshot capture</div>
+            </div>
+          </div>
+          <div style="border:1px solid var(--border2);padding:8px;font-size:.65rem">
+            <div style="color:var(--green2);margin-bottom:4px;letter-spacing:1px">⚠ THREAT INDICATORS</div>
+            <div style="color:var(--textdim)">• Site actively blocks screenshot tools</div>
+            <div style="color:var(--textdim)">• Common behavior of phishing/malware pages</div>
+            <div style="color:var(--textdim)">• Confirms suspicious intent</div>
+          </div>
+        </div>
+        <div class="ss-label">🌐 ${target} — CAPTURE BLOCKED</div>`;
+      return;
+    }
+    const url = apis[tried++];
+    const img = new Image();
+    img.onload = function(){
+      if(img.naturalWidth < 100){
+        tryNext(); return;
+      }
+      card.innerHTML = `<img src="${url}" style="width:100%;display:block"/>
+        <div class="ss-label">🌐 ${target} — LIVE CAPTURE</div>`;
+    };
+    img.onerror = function(){ tryNext(); };
+    img.src = url;
+    // Timeout after 8s
+    setTimeout(()=>{ if(!img.complete) tryNext(); }, 8000);
+  }
+  tryNext();
 }
 
 function card(title,tl,content){
