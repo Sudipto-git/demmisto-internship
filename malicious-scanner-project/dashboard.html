@@ -473,50 +473,58 @@ function lazyLoadScreenshot(scanId, target){
   const card = document.getElementById('ssCard_'+scanId);
   if(!card) return;
 
-  // Try screenshot APIs in order
-  const apis = [
-    `https://image.thum.io/get/width/1280/crop/800/https://${target}`,
-    `https://mini.s-shot.ru/1280x800/PNG/1024/Z100/?https://${target}`,
-  ];
+  // Use Google thumbnail — always works, no API key
+  const googleThumb = `https://www.google.com/s2/favicons?domain=${target}&sz=128`;
+  const googleCache = `https://webcache.googleusercontent.com/search?q=cache:${target}`;
 
-  let tried = 0;
-  function tryNext(){
-    if(tried >= apis.length){
-      // All failed — show evidence card with scan data
-      card.innerHTML = `
-        <div style="padding:16px;background:#010603">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
-            <span style="font-size:1.4rem">🚫</span>
-            <div>
-              <div style="color:var(--red);font-size:.7rem;letter-spacing:2px">SCREENSHOT BLOCKED</div>
-              <div style="color:var(--textdim);font-size:.62rem">${target} — refused screenshot capture</div>
-            </div>
-          </div>
-          <div style="border:1px solid var(--border2);padding:8px;font-size:.65rem">
-            <div style="color:var(--green2);margin-bottom:4px;letter-spacing:1px">⚠ THREAT INDICATORS</div>
-            <div style="color:var(--textdim)">• Site actively blocks screenshot tools</div>
-            <div style="color:var(--textdim)">• Common behavior of phishing/malware pages</div>
-            <div style="color:var(--textdim)">• Confirms suspicious intent</div>
-          </div>
+  // Build professional evidence card immediately — no waiting
+  card.innerHTML = `
+    <div style="background:#010603;padding:12px;border-bottom:1px solid var(--border2)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <img src="${googleThumb}"
+          style="width:32px;height:32px;border:1px solid var(--border2)"
+          onerror="this.style.display='none'"
+        />
+        <div>
+          <div style="color:var(--green);font-size:.75rem;letter-spacing:1px">${target}</div>
+          <div style="color:var(--textdim);font-size:.6rem">THREAT INTELLIGENCE REPORT</div>
         </div>
-        <div class="ss-label">🌐 ${target} — CAPTURE BLOCKED</div>`;
-      return;
-    }
-    const url = apis[tried++];
-    const img = new Image();
-    img.onload = function(){
-      if(img.naturalWidth < 100){
-        tryNext(); return;
-      }
-      card.innerHTML = `<img src="${url}" style="width:100%;display:block"/>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:.65rem">
+        <div style="border:1px solid var(--border2);padding:6px">
+          <div style="color:var(--textdim);letter-spacing:1px;margin-bottom:3px">VIRUSTOTAL</div>
+          <a href="https://www.virustotal.com/gui/domain/${target}" target="_blank"
+            style="color:var(--cyan)">↗ Check on VT</a>
+        </div>
+        <div style="border:1px solid var(--border2);padding:6px">
+          <div style="color:var(--textdim);letter-spacing:1px;margin-bottom:3px">WHOIS</div>
+          <a href="https://who.is/whois/${target}" target="_blank"
+            style="color:var(--cyan)">↗ WHOIS Lookup</a>
+        </div>
+        <div style="border:1px solid var(--border2);padding:6px">
+          <div style="color:var(--textdim);letter-spacing:1px;margin-bottom:3px">DNS</div>
+          <a href="https://dnschecker.org/#A/${target}" target="_blank"
+            style="color:var(--cyan)">↗ DNS Records</a>
+        </div>
+        <div style="border:1px solid var(--border2);padding:6px">
+          <div style="color:var(--textdim);letter-spacing:1px;margin-bottom:3px">THREAT DB</div>
+          <a href="https://threatfox.abuse.ch/browse/?search=${target}" target="_blank"
+            style="color:var(--cyan)">↗ ThreatFox</a>
+        </div>
+      </div>
+    </div>
+    <div class="ss-label">🌐 ${target} — OSINT LINKS</div>`;
+
+  // Also try screenshot in background — show if it loads within 10s
+  const img = new Image();
+  img.onload = function(){
+    if(img.naturalWidth > 200){
+      card.innerHTML = `<img src="${img.src}" style="width:100%;display:block"/>
         <div class="ss-label">🌐 ${target} — LIVE CAPTURE</div>`;
-    };
-    img.onerror = function(){ tryNext(); };
-    img.src = url;
-    // Timeout after 8s
-    setTimeout(()=>{ if(!img.complete) tryNext(); }, 8000);
-  }
-  tryNext();
+    }
+  };
+  img.src = `https://image.thum.io/get/width/1280/crop/800/https://${target}`;
+  setTimeout(()=>{ img.src=''; }, 10000);
 }
 
 function card(title,tl,content){
